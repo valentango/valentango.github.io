@@ -5,51 +5,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>ValenTango 2026 Full Schedule</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css"></link>
 </head>
-<body class="safe-area-bottom">
+<body class="bg-black">
 
     <header class="main-header sticky top-0 z-40">
-        <div class="max-w-4xl mx-auto px-5 pt-6 pb-4">
-            <div class="flex justify-between items-end mb-5">
+        <div class="max-w-2xl mx-auto px-6 pb-6">
+            <div class="flex justify-between items-end mb-6">
                 <div>
-                    <h1 class="text-2xl font-bold tracking-tight text-white">ValenTango 2026</h1>
-                    <p class="text-zinc-400 text-[11px] uppercase tracking-wider font-medium">Portland, OR • Feb 11-16</p>
+                    <h1 class="text-3xl font-extrabold tracking-tight">ValenTango</h1>
+                    <p class="text-zinc-500 text-xs uppercase tracking-widest font-bold mt-1">Portland 2026</p>
                 </div>
-                <div id="clock" class="text-[10px] font-mono text-zinc-500 uppercase pb-1">Feb 5, 2026</div>
+                <div class="text-[11px] font-mono text-zinc-600 bg-zinc-900 px-2 py-1 rounded">Feb 11-16</div>
             </div>
             
-            <div class="filter-container -mx-5 px-5">
-                <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
-                    <button onclick="setFilter('all')" id="filter-all" class="filter-chip active">All Events</button>
-                    <button onclick="setFilter('milonga')" id="filter-milonga" class="filter-chip">Milongas</button>
-                    <button onclick="setFilter('Beg')" id="filter-Beg" class="filter-chip">Beginner</button>
-                    <button onclick="setFilter('Int')" id="filter-Int" class="filter-chip">Intermediate</button>
-                    <button onclick="setFilter('Adv')" id="filter-Adv" class="filter-chip">Advanced</button>
-                </div>
+            <div class="flex gap-3 overflow-x-auto no-scrollbar -mx-6 px-6">
+                <button onclick="setFilter('all')" id="filter-all" class="filter-chip active">All</button>
+                <button onclick="setFilter('milonga')" id="filter-milonga" class="filter-chip">Milongas</button>
+                <button onclick="setFilter('Beg')" id="filter-Beg" class="filter-chip">Beg</button>
+                <button onclick="setFilter('Int')" id="filter-Int" class="filter-chip">Int</button>
+                <button onclick="setFilter('Adv')" id="filter-Adv" class="filter-chip">Adv</button>
             </div>
         </div>
     </header>
 
-    <main id="event-list" class="max-w-4xl mx-auto"></main>
-
-    <div id="details-view" class="details-overlay">
-        <div class="max-w-2xl mx-auto px-6 pt-12 pb-24">
-            <button onclick="closeDetails()" class="back-button mb-8">
-                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-                <span>Back to Schedule</span>
-            </button>
-            <div id="details-content"></div>
-        </div>
-    </div>
+    <main id="event-list" class="max-w-2xl mx-auto px-6 event-list-container"></main>
 
     <script src="events.js"></script>
     <script>
 
         let currentFilter = 'all';
 
-        function formatTime(iso) { return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); }
-        function formatDate(iso) { return new Date(iso).toLocaleDateString([], { weekday: 'short', month: 'short', day: 'numeric' }); }
+        function formatTime(iso) { return new Date(iso).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }); }
+        function formatDate(iso) { return new Date(iso).toLocaleDateString([], { weekday: 'long', month: 'short', day: 'numeric' }); }
 
         function setFilter(filter) {
             currentFilter = filter;
@@ -80,69 +68,29 @@
                 }
 
                 const card = document.createElement('div');
-                card.className = `event-card ${e.type === 'milonga' ? 'milonga-type' : 'class-type'}`;
-                card.onclick = () => showDetails(e.id);
+                card.className = 'event-card';
+                
                 card.innerHTML = `
-                    <div class="flex-1 min-w-0">
-                        <div class="flex items-center gap-2 mb-1.5">
-                            <span class="text-zinc-500 font-mono text-[11px] font-medium">${formatTime(e.start)}</span>
-                            <span class="room-tag">${e.room}</span>
+                    <div class="flex justify-between items-center mb-4">
+                        <div class="flex items-center gap-3">
+                            <span class="text-xs font-black tracking-tighter ${e.type === 'milonga' ? 'milonga-indicator' : 'class-indicator'}">${formatTime(e.start)} - ${formatTime(e.end)}</span>
+                            <span class="room-pill">${e.room}</span>
                         </div>
-                        <h3 class="text-[15px] font-semibold text-white leading-snug mb-1 truncate">${e.title}</h3>
-                        <p class="text-[11px] text-zinc-500 font-medium uppercase tracking-tight">${e.level} • ${e.instructor}</p>
+                        <span class="price-text">${e.price}</span>
                     </div>
-                    <div class="flex flex-col items-end gap-1">
-                        <span class="price-tag">${e.price}</span>
-                        <svg class="text-zinc-700" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+                    
+                    <h3 class="text-xl font-bold leading-tight mb-2">${e.title}</h3>
+                    
+                    <div class="flex items-center gap-2 mb-4">
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-zinc-400">${e.level}</span>
+                        <span class="text-zinc-700">•</span>
+                        <span class="text-[11px] font-bold uppercase tracking-wider text-purple-400">${e.instructor}</span>
                     </div>
+
+                    <p class="text-[14px] text-zinc-400 leading-relaxed font-normal">${e.description}</p>
                 `;
                 list.appendChild(card);
             });
-        }
-
-        function showDetails(id) {
-            const e = events.find(x => x.id === id);
-            const content = document.getElementById('details-content');
-            
-            content.innerHTML = `
-                <div class="mb-6"><span class="badge ${e.type === 'milonga' ? 'badge-milonga' : 'badge-class'}">${e.type}</span></div>
-                <h2 class="text-3xl font-bold mb-6 leading-tight tracking-tight">${e.title}</h2>
-                <div class="grid grid-cols-2 gap-y-8 gap-x-4 mb-10 pb-10 border-b border-zinc-900">
-                    <div>
-                        <div class="detail-label">Time</div>
-                        <div class="text-base text-white">${formatDate(e.start)}<br/>${formatTime(e.start)} - ${formatTime(e.end)}</div>
-                    </div>
-                    <div>
-                        <div class="detail-label">Location</div>
-                        <div class="text-base text-white">${e.room}</div>
-                    </div>
-                    <div>
-                        <div class="detail-label">Instructor/Host</div>
-                        <div class="text-base font-semibold text-purple-400">${e.instructor}</div>
-                    </div>
-                    <div>
-                        <div class="detail-label">Price</div>
-                        <div class="text-base font-mono text-zinc-300">${e.price}</div>
-                    </div>
-                </div>
-                <div class="space-y-4">
-                    <h3 class="detail-label">Description</h3>
-                    <p class="text-zinc-400 leading-relaxed text-lg font-light">${e.description}</p>
-                </div>
-            `;
-            const el = document.getElementById('details-view');
-            el.style.display = 'block';
-            setTimeout(() => el.classList.add('active'), 10);
-            document.body.style.overflow = 'hidden';
-        }
-
-        function closeDetails() {
-            const el = document.getElementById('details-view');
-            el.classList.remove('active');
-            setTimeout(() => {
-                el.style.display = 'none';
-                document.body.style.overflow = 'auto';
-            }, 300);
         }
 
         window.onload = renderEvents;
