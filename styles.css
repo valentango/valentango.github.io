@@ -136,3 +136,24 @@ body.light-mode .event-card {
 
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+
+.event-card p a {
+    color: var(--accent-blue);
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    font-weight: 600;
+    transition: opacity 0.2s ease;
+    display: inline-flex;
+    align-items: center;
+}
+
+.event-card p a:hover {
+    opacity: 0.8;
+}
+
+/* Optional: Add a small icon indicator via CSS if you want it even more obvious */
+.event-card p a::after {
+    content: " ↗";
+    font-size: 10px;
+    margin-left: 2px;
+}
