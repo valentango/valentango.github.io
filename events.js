@@ -160,7 +160,7 @@ const events = [
         start: "2026-02-13T21:00:00",
         end: "2026-02-14T02:00:00",
         level: "All",
-        instructor: "DJ Avix / Host Jurni",
+        instructor: "DJ Avik / Host Jurni",
         room: "Broadway",
         price: "$30",
         type: "milonga",
@@ -331,6 +331,6 @@ const events = [
         type: "milonga",
         description: ""
     },
-    { title: "Post-Valentango Bookend Milonga", start: "2026-02-17T19:30:00", end: "2026-02-17T10:30:00", level: "All", instructor: "DJ Stephen Bradley", room: "Shabu Studios", price: "$12", type: "milonga", description: "Community event not included in milonga pass" }
+    { title: "Post-Valentango Bookend Milonga", start: "2026-02-17T19:30:00", end: "2026-02-17T10:30:00", level: "All", instructor: "DJ Stephen Brady", room: "Shabu Studios", price: "$12", type: "milonga", description: "Community event not included in milonga pass" }
 
 ];

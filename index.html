@@ -57,6 +57,8 @@
     <main id="event-list" class="max-w-2xl mx-auto px-6 pt-4"></main>
 
     <script src="events.js"></script>
+    <script src="names.js"></script>
+
     <script>
         const FILTER_KEY = 'valentango_filter_pref';
         const THEME_KEY = 'valentango_theme_pref';
@@ -162,6 +164,45 @@
 
             list.innerHTML = '';
             
+            const linkifyInstructor = (instructorStr, eventType) => {
+                if (!instructorStr || typeof nameToUrl === 'undefined') return instructorStr;
+
+                // 1. Exact Match First (e.g. "Robin & Dagny")
+                if (nameToUrl[instructorStr]) {
+                    return `<a href="${nameToUrl[instructorStr]}" target="_blank" class="hover:underline">${instructorStr}</a>`;
+                }
+
+                // 2. DJ Logic (Check if "DJ" exists in the string)
+                if (instructorStr.toUpperCase().includes("DJ")) {
+                    let djHandled = instructorStr;
+                    Object.keys(nameToUrl).forEach(name => {
+                        // Look for the name part within the string
+                        if (instructorStr.includes(name)) {
+                            const link = `<a href="${nameToUrl[name]}" target="_blank" class="hover:underline">${name}</a>`;
+                            djHandled = djHandled.replace(name, link);
+                        }
+                    });
+                    return djHandled;
+                }
+
+                // 3. Partial Match (ONLY for Milongas)
+                if (eventType === 'milonga') {
+                    let finalStr = instructorStr;
+                    // Sort keys by length descending to match "Robin & Dagny" before "Robin"
+                    const sortedNames = Object.keys(nameToUrl).sort((a, b) => b.length - a.length);
+                    
+                    sortedNames.forEach(name => {
+                        if (finalStr.includes(name) && !finalStr.includes(`>${name}</a>`)) {
+                            const link = `<a href="${nameToUrl[name]}" target="_blank" class="hover:underline">${name}</a>`;
+                            finalStr = finalStr.replace(name, link);
+                        }
+                    });
+                    return finalStr;
+                }
+
+                return instructorStr;
+            };
+
             const filtered = events.filter(e => {
                 let matchesCategory = false;
                 if (currentFilters.includes('all')) {
@@ -213,7 +254,7 @@
                     <div class="flex items-center gap-2 mb-4">
                         <span class="text-[11px] font-bold uppercase tracking-wider" style="color: var(--text-secondary)">${e.level === 'advCouples' ? 'ADV COUPLES' : e.level}</span>
                         <span style="color: var(--border-color)">•</span>
-                        <span class="text-[11px] font-bold uppercase tracking-wider" style="color: var(--accent-purple)">${e.instructor}</span>
+                        <span class="text-[11px] font-bold uppercase tracking-wider" style="color: var(--accent-purple)">${linkifyInstructor(e.instructor, e.type)}</span>
                     </div>
                     <p class="text-[14px] leading-relaxed font-normal" style="color: var(--text-secondary)">${e.description}</p>
                 `;
