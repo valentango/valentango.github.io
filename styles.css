@@ -151,9 +151,47 @@ body.light-mode .event-card {
     opacity: 0.8;
 }
 
-/* Optional: Add a small icon indicator via CSS if you want it even more obvious */
 .event-card p a::after {
     content: " ↗";
     font-size: 10px;
     margin-left: 2px;
+}
+
+/* Floating Footer Styles */
+footer.fixed {
+    /* Gradient mask creates a solid bottom so text doesn't show behind buttons */
+    background: linear-gradient(to top, 
+        var(--ios-bg) 0%, 
+        var(--ios-bg) 60%, 
+        transparent 100%
+    );
+}
+
+.footer-link {
+    /* Changed to var(--card-bg) for a 100% solid, opaque background */
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 12px 24px;
+    border-radius: 999px;
+    font-size: 14px;
+    font-weight: 700;
+    text-decoration: none;
+    box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.4);
+    display: flex;
+    align-items: center;
+    transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.footer-link:active {
+    transform: scale(0.95);
+}
+
+body.light-mode .footer-link {
+    box-shadow: 0 10px 20px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Prevent the last event from being hidden behind the footer */
+main#event-list {
+    padding-bottom: 120px;
 }
