@@ -12,7 +12,7 @@
             "Victoria": "https://www.facebook.com/victoria.randlett",
             "Alex": "https://www.tangoberretin.com/alexkrebs",
             "Steve Correl": "https://www.facebook.com/steve.correl.1/",
-            "Stephen Brady": "https://www.facebook.com/steve.bradley.5015/",
+            "Stephen Brady": "https://www.facebook.com/stephen.brady/",
             "Andy Stein": "https://www.facebook.com/andris.stein/",
             "Robin": "http://robinthomastango.com/w/robin/",
             "Rob": "https://www.facebook.com/rob.montango",
