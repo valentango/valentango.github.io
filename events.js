@@ -193,7 +193,7 @@ const events = [
         start: "2026-02-14T17:00:00",
         end: "2026-02-14T18:30:00",
         level: "All",
-        instructor: "DJ Rob",
+        instructor: "DJ Rob M",
         room: "Hawthorne",
         price: "Free",
         type: "milonga",
@@ -219,7 +219,7 @@ const events = [
         room: "Broadway",
         price: "$40",
         type: "milonga",
-        description: "<b>LIVE MUSIC: </a><a target='_blank' href='https://soundcloud.com/andrewjoliver/sets/alex-krebs-tango-orchestra'>Alex Krebs Tango Orchestra</a>. <br/>Performances at 11:00p. <br/> Concurrent Alternative (10:00p-1:00a) with DJ Rob in Cascade."
+        description: "<b>LIVE MUSIC: </a><a target='_blank' href='https://soundcloud.com/andrewjoliver/sets/alex-krebs-tango-orchestra'>Alex Krebs Tango Orchestra</a>. <br/>Performances at 11:00p. <br/> Concurrent Alternative (10:00p-1:00a) with DJ Rob M in Cascade."
     },
     {
         title: "Post Grande Ball",
@@ -303,7 +303,7 @@ const events = [
         start: "2026-02-16T14:00:00",
         end: "2026-02-16T17:00:00",
         level: "All",
-        instructor: "DJ Rob / Host Becky",
+        instructor: "DJ Rob M / Host Becky",
         room: "Cascade",
         price: "$20",
         type: "milonga",
