@@ -5,20 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ValenTango 2026 Full Schedule</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-        body { font-family: 'Inter', sans-serif; background-color: #000; color: #fff; }
-        .filter-chip { transition: all 0.2s; border: 1px solid #333; cursor: pointer; }
-        .filter-chip.active { background-color: #a855f7; border-color: #a855f7; color: white; }
-        .event-card { border-bottom: 1px solid #1f2937; transition: background-color 0.2s; }
-        .event-card:hover { background-color: #0a0a0a; }
-        .details-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #000; z-index: 50; display: none; overflow-y: auto; }
-        .room-tag { font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; background: #222; color: #aaa; text-transform: uppercase; }
-        .milonga-type { border-left: 4px solid #a855f7; }
-        .class-type { border-left: 4px solid #3b82f6; }
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-    </style>
+    <link rel="stylesheet" href="styles.css"></link>
 </head>
 <body class="pb-20">
 
@@ -52,80 +39,8 @@
         </div>
     </div>
 
+    <script src="events.js"></script>
     <script>
-        const events = [
-            // WEDNESDAY FEB 11
-            { id: 1, title: "Opening Traditional Milonga", start: "2026-02-11T21:00:00", end: "2026-02-12T01:00:00", level: "All", instructor: "DJ Michael D / Host Becky", room: "Cascade", price: "$20", type: "milonga", description: "The official kick-off to the festival. Traditional music in the beautiful Cascade ballroom." },
-
-            // THURSDAY FEB 12
-            { id: 2, title: "Difference: Medio Giro vs. Giro Milonguero", start: "2026-02-12T11:00:00", end: "2026-02-12T12:15:00", level: "Beg", instructor: "Roxana & Cesar", room: "Halsey", price: "$35", type: "class", description: "Understanding the structural differences between turns." },
-            { id: 3, title: "Elasticity & Compression of the Embrace", start: "2026-02-12T11:00:00", end: "2026-02-12T12:15:00", level: "Int", instructor: "Marcos & Florencia", room: "Morrison", price: "$35", type: "class", description: "Create fluid transitions through embrace mechanics." },
-            { id: 4, title: "All about Sacadas (Multiple directions)", start: "2026-02-12T11:00:00", end: "2026-02-12T12:15:00", level: "Adv", instructor: "Paloma & Maxi", room: "Main Ballroom", price: "$35", type: "class", description: "Front, opposite, lineal, circular, parallel, and cross system sacadas." },
-            { id: 5, title: "Charming Discreet Inside Gancho & Double Back Cross", start: "2026-02-12T11:00:00", end: "2026-02-12T12:15:00", level: "Adv Couples", instructor: "Robin & Dagny", room: "Cascade", price: "$35", type: "class", description: "Subtle and advanced leg play for crowded floors." },
-            { id: 6, title: "Floor Boleos", start: "2026-02-12T13:45:00", end: "2026-02-12T15:00:00", level: "Beg", instructor: "Robin & Dagny", room: "Halsey", price: "$35", type: "class", description: "Learning low, safe boleos for the social dance floor." },
-            { id: 7, title: "Density and Grounded for Melty/Melodic Movements", start: "2026-02-12T13:45:00", end: "2026-02-12T15:00:00", level: "Int", instructor: "Paloma & Maxi", room: "Morrison", price: "$35", type: "class", description: "Focusing on weight and connection for melodic phrasing." },
-            { id: 8, title: "Exploring Ganchos - Static vs Dynamic", start: "2026-02-12T13:45:00", end: "2026-02-12T15:00:00", level: "Adv", instructor: "Marcos & Florencia", room: "Main Ballroom", price: "$35", type: "class", description: "Controlling leg hooks in different intensities." },
-            { id: 9, title: "Mixed Alt/Trad Milonga", start: "2026-02-12T14:00:00", end: "2026-02-12T17:00:00", level: "All", instructor: "DJ Victoria / Host Jurni", room: "Cascade", price: "$20", type: "milonga", description: "Afternoon social dancing with a blend of styles." },
-            { id: 10, title: "Easy Guide to Improvisation", start: "2026-02-12T15:30:00", end: "2026-02-12T16:45:00", level: "Beg", instructor: "Celina & Hugo", room: "Halsey", price: "$35", type: "class", description: "Building confidence to create your own dance." },
-            { id: 11, title: "The Molinete - 8 Position Turns", start: "2026-02-12T15:30:00", end: "2026-02-12T16:45:00", level: "Int", instructor: "Roxana & Cesar", room: "Morrison", price: "$35", type: "class", description: "Precision turning on both sides." },
-            { id: 12, title: "Free Milonga (Practica)", start: "2026-02-12T17:00:00", end: "2026-02-12T18:30:00", level: "All", instructor: "DJ Koichiro", room: "Halsey", price: "Free", type: "milonga", description: "Open floor for practice and social dancing." },
-            { id: 13, title: "Equal Opportunity Mixer", start: "2026-02-12T18:00:00", end: "2026-02-12T20:00:00", level: "All", instructor: "DJ Michael D / Host Becky", room: "Cascade", price: "$10", type: "milonga", description: "A high-energy mixer designed to get everyone dancing." },
-            { id: 14, title: "Traditional Milonga", start: "2026-02-12T21:00:00", end: "2026-02-13T02:00:00", level: "All", instructor: "DJ Andy / Host Leon", room: "Main Ballroom", price: "$25", type: "milonga", description: "Main Thursday night milonga." },
-            { id: 15, title: "Mixed Alt/Trad Milonga", start: "2026-02-12T14:00:00", end: "2026-02-12T17:00:00", level: "All", instructor: "DJ Brick / Host Gaylord", room: "Cascade", price: "$20", type: "milonga", description: "Alternative and traditional mix." },
-
-            // FRIDAY FEB 13
-            { id: 16, title: "Tango Fundamentals - Connection & Music", start: "2026-02-13T11:00:00", end: "2026-02-13T12:15:00", level: "Beg", instructor: "Marcos & Florencia", room: "Halsey", price: "$35", type: "class", description: "Essential balance and embrace work." },
-            { id: 17, title: "D.I.R - Simple Elements for Dynamic Rhythms", start: "2026-02-13T11:00:00", end: "2026-02-13T12:15:00", level: "Int", instructor: "Celina & Hugo", room: "Morrison", price: "$35", type: "class", description: "Enhancing your musicality with rhythmic accents." },
-            { id: 18, title: "Breathe and Belong - High Connection", start: "2026-02-13T11:00:00", end: "2026-02-13T12:15:00", level: "Adv", instructor: "Robin & Dagny", room: "Main Ballroom", price: "$35", type: "class", description: "Focusing on the internal feeling of the dance." },
-            { id: 19, title: "The Reverse Chain for Vals", start: "2026-02-13T11:00:00", end: "2026-02-13T12:15:00", level: "Adv Couples", instructor: "Roxana & Cesar", room: "Cascade", price: "$35", type: "class", description: "Circular movement sequences for Vals." },
-            { id: 20, title: "Mixed Alt/Trad Milonga", start: "2026-02-13T14:00:00", end: "2026-02-13T17:00:00", level: "All", instructor: "DJ Rob / Host Becky", room: "Cascade", price: "$20", type: "milonga", description: "Friday afternoon mix." },
-            { id: 21, title: "Mastering the Turn with Lapiz", start: "2026-02-13T13:45:00", end: "2026-02-13T15:00:00", level: "Int", instructor: "Paloma & Maxi", room: "Morrison", price: "$35", type: "class", description: "Adding elegant floor circles to your turns." },
-            { id: 22, title: "Classic Figures for the Dance Floor", start: "2026-02-13T13:45:00", end: "2026-02-13T15:00:00", level: "Adv", instructor: "Cecilia Gonzalez", room: "Main Ballroom", price: "$35", type: "class", description: "Milonguero style essentials." },
-            { id: 23, title: "Complex and Surprising Figures", start: "2026-02-13T15:30:00", end: "2026-02-13T16:45:00", level: "Int", instructor: "Marcos & Florencia", room: "Morrison", price: "$35", type: "class", description: "Dynamic and unexpected moves." },
-            { id: 24, title: "Circular Sequences - Turns & Sacadas", start: "2026-02-13T15:30:00", end: "2026-02-13T16:45:00", level: "Adv", instructor: "Celina & Hugo", room: "Main Ballroom", price: "$35", type: "class", description: "Combining rotational elements for advanced dancers." },
-            { id: 25, title: "Free Milonga: Regular (Practica)", start: "2026-02-13T17:00:00", end: "2026-02-13T18:30:00", level: "All", instructor: "DJ Avik", room: "Halsey", price: "Free", type: "milonga", description: "Afternoon practice session." },
-            { id: 26, title: "Free Milonga: Reverse Role (Practica)", start: "2026-02-13T17:00:00", end: "2026-02-13T18:30:00", level: "All", instructor: "DJ Andy Stein", room: "Hawthorne", price: "Free", type: "milonga", description: "Leads and follows switch roles." },
-            { id: 27, title: "Mish/Mash Mixer", start: "2026-02-13T18:00:00", end: "2026-02-13T20:00:00", level: "All", instructor: "DJ Koichiro / Host Leonor", room: "Cascade", price: "$10", type: "milonga", description: "Eclectic mixer." },
-            { id: 28, title: "Friday Trad Milonga", start: "2026-02-13T21:00:00", end: "2026-02-14T02:00:00", level: "All", instructor: "DJ Avik / Host Becky", room: "Main Ballroom", price: "$30", type: "milonga", description: "Major Friday night milonga." },
-            { id: 29, title: "Post-Milonga Alternative", start: "2026-02-14T02:00:00", end: "2026-02-14T06:00:00", level: "All", instructor: "DJ Brick / Host Gaylord", room: "Cascade", price: "$20", type: "milonga", description: "Late night alternative dancing." },
-
-            // SATURDAY FEB 14
-            { id: 30, title: "Tango: Embrace & Interaction", start: "2026-02-14T11:00:00", end: "2026-02-14T12:15:00", level: "Beg", instructor: "Paloma & Maxi", room: "Halsey", price: "$35", type: "class", description: "Foundational interaction in the embrace." },
-            { id: 31, title: "Colgadas - Balance and Dissociation", start: "2026-02-14T11:00:00", end: "2026-02-14T12:15:00", level: "Int", instructor: "Celina & Hugo", room: "Morrison", price: "$35", type: "class", description: "Off-axis movement and stretch." },
-            { id: 32, title: "Traditional Vals Figures", start: "2026-02-14T11:00:00", end: "2026-02-14T12:15:00", level: "Adv", instructor: "Cecilia Gonzalez", room: "Main Ballroom", price: "$35", type: "class", description: "Classic turns and figures for Vals." },
-            { id: 33, title: "High Level Milonga", start: "2026-02-14T11:00:00", end: "2026-02-14T12:15:00", level: "Adv Couples", instructor: "Marcos & Florencia", room: "Cascade", price: "$35", type: "class", description: "Complex rhythmic milonga for partners." },
-            { id: 34, title: "Alternative Milonga", start: "2026-02-14T14:00:00", end: "2026-02-14T17:00:00", level: "All", instructor: "DJ Rob / Host Jurni", room: "Cascade", price: "$20", type: "milonga", description: "Saturday afternoon alternative." },
-            { id: 35, title: "Walking in Parallel & Cross System", start: "2026-02-14T13:45:00", end: "2026-02-14T15:00:00", level: "Beg", instructor: "Roxana & Cesar", room: "Halsey", price: "$35", type: "class", description: "Understanding the two systems of walking." },
-            { id: 36, title: "Boleos and Ganchos", start: "2026-02-14T13:45:00", end: "2026-02-14T15:00:00", level: "Int", instructor: "Robin & Dagny", room: "Morrison", price: "$35", type: "class", description: "Adding dynamics to your social dance." },
-            { id: 37, title: "Advanced Milonga", start: "2026-02-14T13:45:00", end: "2026-02-14T15:00:00", level: "Adv", instructor: "Robin & Dagny", room: "Main Ballroom", price: "$35", type: "class", description: "Fast-paced rhythmic milonga technique." },
-            { id: 38, title: "Ochos - Decoration and Styling", start: "2026-02-14T15:30:00", end: "2026-02-14T16:45:00", level: "Beg", instructor: "Paloma & Maxi", room: "Halsey", price: "$35", type: "class", description: "Styling for followers and leads." },
-            { id: 39, title: "Barridas and Paradas", start: "2026-02-14T15:30:00", end: "2026-02-14T16:45:00", level: "Int", instructor: "Roxana & Cesar", room: "Morrison", price: "$35", type: "class", description: "Playing with stops and sweeps on the floor." },
-            { id: 40, title: "Retro Tango - Jewels from the Past", start: "2026-02-14T15:30:00", end: "2026-02-14T16:45:00", level: "Adv", instructor: "Cecilia Gonzalez", room: "Main Ballroom", price: "$35", type: "class", description: "Vintage movements and nuances." },
-            { id: 41, title: "Free Milonga (Practica)", start: "2026-02-14T17:00:00", end: "2026-02-14T18:30:00", level: "All", instructor: "DJ Brick", room: "Halsey", price: "Free", type: "milonga", description: "Open dance floor." },
-            { id: 42, title: "Grande Traditional Milonga (Live Orchestra)", start: "2026-02-14T20:00:00", end: "2026-02-15T02:00:00", level: "All", instructor: "Alex Krebs Orchestra / DJ Michael D", room: "Main Ballroom", price: "$40", type: "milonga", description: "The centerpiece gala. Live music and performances at 11pm." },
-            { id: 43, title: "Concurrent Alternative Milonga", start: "2026-02-14T22:00:00", end: "2026-02-15T01:00:00", level: "All", instructor: "DJ Rob", room: "Cascade", price: "$40", type: "milonga", description: "Alt-milonga during the Grande Ball." },
-            { id: 44, title: "Post Grande Ball Traditional", start: "2026-02-15T02:00:00", end: "2026-02-15T06:00:00", level: "All", instructor: "DJ Avik / Host Gaylord", room: "Cascade", price: "$20", type: "milonga", description: "Keep dancing until dawn." },
-
-            // SUNDAY FEB 15
-            { id: 45, title: "Alternative Milonga (Live Music)", start: "2026-02-15T14:00:00", end: "2026-02-15T17:00:00", level: "All", instructor: "What the Tango?! Orchestra / DJ Alex Krebs", room: "Main Ballroom", price: "$25", type: "milonga", description: "Live alternative orchestra session." },
-            { id: 46, title: "Playful Rebounds & Ocho Cortado", start: "2026-02-15T13:45:00", end: "2026-02-15T15:00:00", level: "Beg", instructor: "Marcos & Florencia", room: "Halsey", price: "$35", type: "class", description: "Flowing through the most common floor figures." },
-            { id: 47, title: "How to know? Leg wraps or Gancho", start: "2026-02-15T13:45:00", end: "2026-02-15T15:00:00", level: "Int", instructor: "Roxana & Cesar", room: "Morrison", price: "$35", type: "class", description: "Deciphering lead and follow leg mechanics." },
-            { id: 48, title: "Vals - Turns with Different Accents", start: "2026-02-15T13:45:00", end: "2026-02-15T15:00:00", level: "Adv", instructor: "Paloma & Maxi", room: "Cascade", price: "$35", type: "class", description: "Advanced musical phrasing for Vals." },
-            { id: 49, title: "Introduction to Milonga", start: "2026-02-15T15:30:00", end: "2026-02-15T16:45:00", level: "Beg", instructor: "Robin & Dagny", room: "Halsey", price: "$35", type: "class", description: "Learning the basics of the fast 2/4 rhythm." },
-            { id: 50, title: "Calesitas - Carrousel", start: "2026-02-15T15:30:00", end: "2026-02-15T16:45:00", level: "Int", instructor: "Celina & Hugo", room: "Morrison", price: "$35", type: "class", description: "Flexibility in hugging and achieving balance in turns." },
-            { id: 51, title: "Sacadas for All", start: "2026-02-15T15:30:00", end: "2026-02-15T16:45:00", level: "Adv", instructor: "Cecilia Gonzalez", room: "Cascade", price: "$35", type: "class", description: "Dynamic leg placement for all styles." },
-            { id: 52, title: "The Power of Two", start: "2026-02-15T17:00:00", end: "2026-02-15T18:15:00", level: "Adv Couples", instructor: "Marcos & Florencia", room: "Morrison", price: "$35", type: "class", description: "Parallel, Crossed, Linear & Circular Walks. Mastering floor navigation." },
-            { id: 53, title: "Free Milonga: Regular (Practica)", start: "2026-02-15T17:00:00", end: "2026-02-15T18:30:00", level: "All", instructor: "DJ Andy Stein", room: "Halsey", price: "Free", type: "milonga", description: "Final afternoon practice." },
-            { id: 54, title: "Free Milonga: Reverse Role (Practica)", start: "2026-02-15T17:00:00", end: "2026-02-15T18:30:00", level: "All", instructor: "DJ Victoria", room: "Hawthorne", price: "Free", type: "milonga", description: "Final reverse role session." },
-            { id: 55, title: "Living Orchestras Milonga", start: "2026-02-15T17:00:00", end: "2026-02-15T20:00:00", level: "All", instructor: "DJ Brick / Host Gaylord", room: "Cascade", price: "$20", type: "milonga", description: "Milonga featuring recordings of living orchestras." },
-            { id: 56, title: "Closing Traditional Milonga", start: "2026-02-15T21:00:00", end: "2026-02-16T02:00:00", level: "All", instructor: "DJ Koichiro / Host Becky", room: "Main Ballroom", price: "$25", type: "milonga", description: "The official festival closing." },
-            { id: 57, title: "Late Night Traditional (with Cake & Coffee)", start: "2026-02-16T02:00:00", end: "2026-02-16T06:00:00", level: "All", instructor: "DJ Michael D / Host Leonor", room: "Cascade", price: "$20", type: "milonga", description: "The survivors' milonga." },
-
-            // MONDAY FEB 16
-            { id: 58, title: "Mixed Alt/Trad Milonga", start: "2026-02-16T14:00:00", end: "2026-02-16T17:00:00", level: "All", instructor: "DJ Rob / Host Becky", room: "Cascade", price: "$20", type: "milonga", description: "Monday afternoon wind-down." },
-            { id: 59, title: "Final Guided Practica (Milonga)", start: "2026-02-16T14:30:00", end: "2026-02-16T16:00:00", level: "All", instructor: "All Instructors", room: "Morrison", price: "Free", type: "milonga", description: "One last dance with all the pros." }
-        ];
-
         let currentFilter = 'all';
 
         function formatTime(iso) { return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); }
@@ -181,7 +96,7 @@
             const e = events.find(x => x.id === id);
             const content = document.getElementById('details-content');
             // Check if room name already ends with "Ballroom" to avoid duplication
-            const roomDisplay = e.room.toLowerCase().includes('ballroom') ? e.room : `${e.room} Ballroom`;
+            const roomDisplay = e.room;
             
             content.innerHTML = `
                 <div class="mb-6"><span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${e.type === 'milonga' ? 'bg-purple-900/40 text-purple-400' : 'bg-blue-900/40 text-blue-400'}">${e.type}</span></div>
