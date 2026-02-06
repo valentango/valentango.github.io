@@ -1,89 +1,138 @@
- @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
         
-        :root {
-            --ios-bg: #000000;
-            --accent-purple: #a855f7;
-            --accent-blue: #3b82f6;
-            --safe-top: env(safe-area-inset-top);
-            --safe-bottom: env(safe-area-inset-bottom);
-        }
+:root {
+    /* Subtle Dark Palette */
+    --ios-bg: #0a0a0a;
+    --text-primary: #f4f4f5;
+    --text-secondary: #a1a1aa;
+    --header-bg: rgba(10, 10, 10, 0.85);
+    --border-color: rgba(255, 255, 255, 0.08);
+    --chip-bg: #18181b;
+    --chip-border: #27272a;
+    --chip-text: #a1a1aa;
+    --chip-active-bg: #f4f4f5;
+    --chip-active-text: #09090b;
+    --card-bg: #141417;
+    --room-pill-bg: #27272a;
+    --room-pill-text: #e4e4e7;
+    
+    --accent-purple: #c084fc;
+    --accent-blue: #60a5fa;
+    --safe-top: env(safe-area-inset-top);
+}
 
-        body { 
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
-            background-color: var(--ios-bg); 
-            color: #fff; 
-            margin: 0;
-            -webkit-font-smoothing: antialiased;
-        }
+body.light-mode {
+    /* Subtle Light Palette */
+    --ios-bg: #fcfcf9;
+    --text-primary: #1c1c1e;
+    --text-secondary: #636366;
+    --header-bg: rgba(252, 252, 249, 0.9);
+    --border-color: rgba(0, 0, 0, 0.06);
+    --chip-bg: #efeff0;
+    --chip-border: #e5e5e7;
+    --chip-text: #8e8e93;
+    --chip-active-bg: #1c1c1e;
+    --chip-active-text: #ffffff;
+    --card-bg: #ffffff;
+    --room-pill-bg: #e5e5e7;
+    --room-pill-text: #3a3a3c;
+    --accent-purple: #9333ea;
+    --accent-blue: #2563eb;
+}
 
-        .main-header {
-            background-color: rgba(0, 0, 0, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
-            padding-top: calc(1rem + var(--safe-top));
-        }
+body { 
+    font-family: 'Inter', -apple-system, sans-serif; 
+    background-color: var(--ios-bg); 
+    color: var(--text-primary); 
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
 
-        .filter-chip { 
-            transition: all 0.2s ease;
-            border: 1.5px solid #27272a; 
-            background: #18181b;
-            color: #a1a1aa;
-            font-size: 14px;
-            font-weight: 600;
-            padding: 10px 20px;
-            border-radius: 12px;
-            white-space: nowrap;
-        }
+.main-header {
+    background-color: var(--header-bg);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 0.5px solid var(--border-color);
+    padding-top: calc(1rem + var(--safe-top));
+}
 
-        .filter-chip.active { 
-            background-color: #fff; 
-            border-color: #fff; 
-            color: #000; 
-        }
+.theme-toggle {
+    background: var(--chip-bg);
+    border: 1px solid var(--chip-border);
+    color: var(--text-primary);
+    padding: 6px 12px;
+    border-radius: 8px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
 
-        .event-card { 
-            padding: 24px 0;
-            border-bottom: 0.5px solid #18181b; 
-        }
+.filter-chip { 
+    transition: all 0.2s ease;
+    border: 1px solid var(--chip-border); 
+    background: var(--chip-bg);
+    color: var(--chip-text);
+    padding: 8px 20px;
+    border-radius: 999px;
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+}
 
-        .milonga-indicator { color: var(--accent-purple); }
-        .class-indicator { color: var(--accent-blue); }
+.filter-chip.active { 
+    background-color: var(--chip-active-bg); 
+    border-color: var(--chip-active-bg); 
+    color: var(--chip-active-text); 
+}
 
-        .date-divider {
-            padding: 32px 0 12px 0;
-            font-size: 12px;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 0.15em;
-            color: #71717a;
-            position: sticky;
-            top: 110px;
-            background: var(--ios-bg);
-            z-index: 10;
-        }
+.event-card { 
+    padding: 20px;
+    margin-bottom: 12px;
+    background-color: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
 
-        .room-pill {
-            font-size: 10px;
-            font-weight: 700;
-            padding: 3px 8px;
-            border-radius: 6px;
-            background: #27272a;
-            color: #e4e4e7;
-            text-transform: uppercase;
-        }
+body.light-mode .event-card {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
 
-        .price-text {
-            font-family: ui-monospace, monospace;
-            font-size: 13px;
-            font-weight: 600;
-            color: #a1a1aa;
-        }
+.milonga-indicator { color: var(--accent-purple); font-weight: 800; }
+.class-indicator { color: var(--accent-blue); font-weight: 800; }
 
-        .no-scrollbar::-webkit-scrollbar { display: none; }
-        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-        
-        /* Mobile specific spacing fixes */
-        @media (max-width: 640px) {
-            .event-list-container { padding-bottom: calc(4rem + var(--safe-bottom)); }
-        }
+.date-divider {
+    padding: 24px 0 12px 8px;
+    font-size: 12px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-secondary);
+    position: sticky;
+    top: 154px;
+    background: var(--ios-bg);
+    z-index: 10;
+}
+
+.room-pill {
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 8px;
+    border-radius: 6px;
+    background: var(--room-pill-bg);
+    color: var(--room-pill-text);
+    text-transform: uppercase;
+}
+
+.price-text {
+    font-family: ui-monospace, monospace;
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+.no-scrollbar::-webkit-scrollbar { display: none; }
+.no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }

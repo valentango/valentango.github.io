@@ -42,6 +42,8 @@ const events = [
     { title: "Turns: Where Is the Axis?", start: "2026-02-14T15:30:00", end: "2026-02-14T16:45:00", level: "Adv", instructor: "Celina & Hugo", room: "Main Ballroom", price: "$35", type: "class", description: "Who is the center? Different forms of execution. Move fluidly, smoothly and energetically." },
     { title: "Leader's Technique", start: "2026-02-15T09:30:00", end: "2026-02-15T10:45:00", level: "Adv", instructor: "Cesar", room: "Main Ballroom", price: "$35", type: "class", description: "Improve your footwork, with a good control of the axis." },
     { title: "Advanced Milonga", start: "2026-02-15T11:00:00", end: "2026-02-15T12:15:00", level: "Adv", instructor: "Robin & Dagny", room: "Main Ballroom", price: "$35", type: "class", description: "" },
+    { title: "Sacadas for All", start: "2026-02-15T15:30:00", end: "2026-02-15T16:45:00", level: "Adv", instructor: "Cecilia Gonzalez", room: "Cascade", price: "$35", type: "class", description: "" },
+    { title: "Vals: Turns With Different Accents", start: "2026-02-15T13:45:00", end: "2026-02-15T15:00:00", level: "Adv", instructor: "Paloma & Maxi", room: "Cascade", price: "$35", type: "class", description: "To improve your musicality." },
 
     // --- ADVANCED COUPLES CLASSES (Cascade / Special) ---
     { title: "Charming Yet Discreet Inside Gancho & Double Back Cross", start: "2026-02-12T11:00:00", end: "2026-02-12T12:15:00", level: "Adv Couples", instructor: "Robin & Dagny", room: "Cascade", price: "$35", type: "class", description: "" },
@@ -49,8 +51,6 @@ const events = [
     { title: "Advanced Close Embrace Secret Steps", start: "2026-02-14T11:00:00", end: "2026-02-14T12:15:00", level: "Adv Couples", instructor: "Robin & Dagny", room: "Cascade", price: "$35", type: "class", description: "" },
     { title: "Combining Barridas and Centrifugal Movements (Colgadas)", start: "2026-02-14T17:00:00", end: "2026-02-14T18:15:00", level: "Adv Couples", instructor: "Roxana & Cesar", room: "Cascade", price: "$35", type: "class", description: "Advanced Couple Master Class." },
     { title: "Retro Tango - Small Jewels From the Past", start: "2026-02-15T11:00:00", end: "2026-02-15T12:15:00", level: "Adv Couples", instructor: "Cecilia Gonzalez", room: "Cascade", price: "$35", type: "class", description: "" },
-    { title: "Vals: Turns With Different Accents", start: "2026-02-15T13:45:00", end: "2026-02-15T15:00:00", level: "Adv", instructor: "Paloma & Maxi", room: "Cascade", price: "$35", type: "class", description: "To improve your musicality." },
-    { title: "Sacadas for All", start: "2026-02-15T15:30:00", end: "2026-02-15T16:45:00", level: "Adv", instructor: "Cecilia Gonzalez", room: "Cascade", price: "$35", type: "class", description: "" },
     { title: "The Power of Two", start: "2026-02-15T17:00:00", end: "2026-02-15T18:15:00", level: "Adv Couples", instructor: "Florencia & Marcos", room: "Morrison", price: "$35", type: "class", description: "Parallel, Crossed, Linear & Circular Walks. Mastering floor navigation." },
 
     // --- MILONGAS & PRACTICAS ---
