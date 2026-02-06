@@ -8,72 +8,73 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
     <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-    <link rel="apple-touch-icon" sizes="57x57" href="/apple-touch-icon-57x57.png" />
-    <link rel="apple-touch-icon" sizes="72x72" href="/apple-touch-icon-72x72.png" />
-    <link rel="apple-touch-icon" sizes="76x76" href="/apple-touch-icon-76x76.png" />
-    <link rel="apple-touch-icon" sizes="114x114" href="/apple-touch-icon-114x114.png" />
-    <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png" />
-    <link rel="apple-touch-icon" sizes="144x144" href="/apple-touch-icon-144x144.png" />
-    <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png" />
-    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png" />
 </head>
 <body class="transition-colors">
 
     <header class="main-header sticky top-0 z-40">
-        <div class="max-w-2xl mx-auto px-4 pb-4">
-            <div class="flex justify-between items-center mb-4 pt-2">
+        <div class="max-w-2xl mx-auto px-4">
+            <div class="flex justify-between items-center mb-3 pt-1">
                 <div>
-                    <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">ValenTango 2026</h1>
-                    <p class="text-[10px] uppercase tracking-widest font-bold" style="color: var(--text-secondary)">Portland, OR</p>
+                    <h1 class="text-xl sm:text-2xl font-extrabold tracking-tight">ValenTango 2026</h1>
                 </div>
                 <button onclick="toggleTheme()" class="theme-toggle" id="theme-btn">Light Mode</button>
             </div>
             
-            <div class="flex flex-wrap items-center gap-2 mb-3">
-                <button onclick="setFilter('all')" id="filter-all" class="filter-chip active">All</button>
-                <button onclick="setFilter('fav')" id="filter-fav" class="filter-chip fav-active">★</button>
-                <button onclick="setFilter('milonga')" id="filter-milonga" class="filter-chip">Milongas</button>
-                <span class="text-[10px] opacity-30">|</span>
-                <button onclick="setFilter('beg')" id="filter-beg" class="filter-chip">Beg</button>
-                <button onclick="setFilter('int')" id="filter-int" class="filter-chip">Int</button>
-                <button onclick="setFilter('adv')" id="filter-adv" class="filter-chip">Adv</button>
-                <button onclick="setFilter('advCouples')" id="filter-advCouples" class="filter-chip">Adv Couples</button>
-                <span class="text-[10px] opacity-30">|</span>
-                <button onclick="setFilter('tuesday')" id="filter-tuesday" class="filter-chip ">Tue</button>
-                <button onclick="setFilter('wednesday')" id="filter-wednesday" class="filter-chip ">Wed</button>
-                <button onclick="setFilter('thursday')" id="filter-thursday" class="filter-chip ">Thu</button>
-                <button onclick="setFilter('friday')" id="filter-friday" class="filter-chip ">Fri</button>
-                <button onclick="setFilter('saturday')" id="filter-saturday" class="filter-chip ">Sat</button>
-                <button onclick="setFilter('sunday')" id="filter-sunday" class="filter-chip ">Sun</button>
-                <button onclick="setFilter('monday')" id="filter-monday" class="filter-chip ">Mon</button>
-                
-                <button onclick="clearFilters()" id="clear-filters" class="text-[10px] font-black uppercase tracking-widest px-2 text-rose-500 hidden whitespace-nowrap bg-transparent border-none cursor-pointer">
-                    Clear ×
-                </button>
+            <div id="filter-wrapper" class="filter-container mb-3">
+                <div class="flex flex-wrap items-center gap-2 mb-3">
+                    <button onclick="setFilter('all')" id="filter-all" class="filter-chip active">All</button>
+                    <button onclick="setFilter('fav')" id="filter-fav" class="filter-chip fav-active">★</button>
+                    <button onclick="setFilter('milonga')" id="filter-milonga" class="filter-chip">Milongas</button>
+                    <span class="text-[10px] opacity-30">|</span>
+                    <button onclick="setFilter('beg')" id="filter-beg" class="filter-chip">Beg</button>
+                    <button onclick="setFilter('int')" id="filter-int" class="filter-chip">Int</button>
+                    <button onclick="setFilter('adv')" id="filter-adv" class="filter-chip">Adv</button>
+                    <button onclick="setFilter('advCouples')" id="filter-advCouples" class="filter-chip">Adv Couples</button>
+                    <span class="text-[10px] opacity-30">|</span>
+                    <button onclick="setFilter('tuesday')" id="filter-tuesday" class="filter-chip">Tue</button>
+                    <button onclick="setFilter('wednesday')" id="filter-wednesday" class="filter-chip">Wed</button>
+                    <button onclick="setFilter('thursday')" id="filter-thursday" class="filter-chip">Thu</button>
+                    <button onclick="setFilter('friday')" id="filter-friday" class="filter-chip">Fri</button>
+                    <button onclick="setFilter('saturday')" id="filter-saturday" class="filter-chip">Sat</button>
+                    <button onclick="setFilter('sunday')" id="filter-sunday" class="filter-chip">Sun</button>
+                    <button onclick="setFilter('monday')" id="filter-monday" class="filter-chip">Mon</button>
+                    
+                    <button onclick="clearFilters()" id="clear-filters" class="text-[10px] font-black uppercase tracking-widest px-2 text-rose-500 hidden whitespace-nowrap bg-transparent border-none cursor-pointer">
+                        Clear ×
+                    </button>
+                </div>
+
+                <div class="relative flex items-center">
+                    <input 
+                        type="text" 
+                        id="search-input" 
+                        oninput="renderEvents()" 
+                        placeholder="Search topic or instructor..." 
+                        class="w-full bg-[var(--chip-bg)] border border-[var(--chip-border)] text-[var(--text-primary)] pl-4 pr-10 py-2 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)] transition-all"
+                    />
+                    <button onclick="clearSearch()" id="clear-search-btn" class="absolute right-2 p-2 text-[var(--text-secondary)] hover:text-rose-500 transition-colors hidden">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
             </div>
 
-            <div class="relative flex items-center">
-                <input 
-                    type="text" 
-                    id="search-input" 
-                    oninput="renderEvents()" 
-                    placeholder="Search by topic, instructor..." 
-                    class="w-full bg-[var(--chip-bg)] border border-[var(--chip-border)] text-[var(--text-primary)] pl-4 pr-10 py-2.5 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)] transition-all"
-                />
-                <button 
-                    onclick="clearSearch()" 
-                    id="clear-search-btn"
-                    class="absolute right-2 p-2 text-[var(--text-secondary)] hover:text-rose-500 transition-colors hidden"
-                >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+            <div class="date-row flex justify-between items-center py-2">
+                <div id="sticky-date-display" class="date-display">
+                    Schedule
+                </div>
+                <button onclick="toggleFilterPane()" class="collapse-toggle" id="pane-toggle-btn">
+                    <span id="pane-toggle-text">Filters</span>
+                    <svg id="pane-arrow" xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M19 9l-7 7-7-7" />
                     </svg>
                 </button>
             </div>
         </div>
     </header>
 
-    <main id="event-list" class="max-w-2xl mx-auto px-4 pt-2"></main>
+    <main id="event-list" class="max-w-2xl mx-auto px-4 pt-4"></main>
 
     <script src="events.js"></script>
     <script src="names.js"></script>
@@ -82,6 +83,7 @@
         const FILTER_KEY = 'valentango_filter_pref';
         const THEME_KEY = 'valentango_theme_pref';
         const FAV_KEY = 'valentango_favorites';
+        const PANE_KEY = 'valentango_pane_visible';
         const DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
         
         let currentFilters = ['all'];
@@ -93,12 +95,48 @@
                 if (savedFilters) currentFilters = JSON.parse(savedFilters);
                 const savedFavs = localStorage.getItem(FAV_KEY);
                 if (savedFavs) favorites = JSON.parse(savedFavs);
+                
                 const isLight = localStorage.getItem(THEME_KEY) === 'true';
                 if (isLight) {
                     document.body.classList.add('light-mode');
                     updateThemeButton(true);
                 }
+
+                const paneHidden = localStorage.getItem(PANE_KEY) === 'false';
+                applyPaneState(!paneHidden);
             } catch (e) { console.warn("Storage access denied", e); }
+        }
+
+        function toggleFilterPane() {
+            const wrapper = document.getElementById('filter-wrapper');
+            const isCurrentlyHidden = wrapper.classList.contains('collapsed');
+            applyPaneState(isCurrentlyHidden);
+            try { localStorage.setItem(PANE_KEY, isCurrentlyHidden); } catch (e) {}
+        }
+
+        function applyPaneState(isVisible) {
+            const wrapper = document.getElementById('filter-wrapper');
+            const btnText = document.getElementById('pane-toggle-text');
+            const arrow = document.getElementById('pane-arrow');
+            
+            if (isVisible) {
+                wrapper.classList.remove('collapsed');
+                btnText.innerText = "Hide";
+                arrow.classList.remove('collapsed-icon');
+            } else {
+                wrapper.classList.add('collapsed');
+                btnText.innerText = "Filters";
+                arrow.classList.add('collapsed-icon');
+            }
+            setTimeout(updateHeaderHeight, 350);
+        }
+
+        function updateHeaderHeight() {
+            const header = document.querySelector('.main-header');
+            if (header) {
+                const height = header.offsetHeight;
+                document.documentElement.style.setProperty('--header-height', height + 'px');
+            }
         }
 
         function toggleFavorite(id) {
@@ -117,7 +155,7 @@
 
         function updateThemeButton(isLight) {
             const btn = document.getElementById('theme-btn');
-            if (btn) btn.innerText = isLight ? "Dark Mode" : "Light Mode";
+            if (btn) btn.innerText = isLight ? "Dark" : "Light";
         }
 
         function formatTime(iso) { 
@@ -170,10 +208,8 @@
 
             list.innerHTML = '';
             
-            const linkifyInstructor = (instructorStr, eventType) => {
+            const linkifyInstructor = (instructorStr) => {
                 if (!instructorStr || typeof nameToUrl === 'undefined') return instructorStr;
-                if (nameToUrl[instructorStr]) return `<a href="${nameToUrl[instructorStr]}" target="_blank">${instructorStr}</a>`;
-                
                 let finalStr = instructorStr;
                 const sortedNames = Object.keys(nameToUrl).sort((a, b) => b.length - a.length);
                 sortedNames.forEach(name => {
@@ -215,21 +251,11 @@
                 return;
             }
 
-            let lastDate = '';
             filtered.forEach(e => {
-                const dateStr = formatDate(e.start);
                 const isFav = favorites.includes(e.id);
-                
-                if(dateStr !== lastDate) {
-                    const h = document.createElement('div');
-                    h.className = 'date-divider';
-                    h.innerText = dateStr;
-                    list.appendChild(h);
-                    lastDate = dateStr;
-                }
-
                 const card = document.createElement('div');
                 card.className = 'event-card';
+                card.dataset.date = formatDate(e.start); // Store date for scroll tracking
                 card.innerHTML = `
                     <div class="flex justify-between items-start mb-2">
                         <div class="flex flex-col gap-1">
@@ -246,20 +272,44 @@
                         <span class="text-[10px] opacity-30">|</span>
                         <span class="price-text">${e.price}</span>
                         <span class="text-[10px] opacity-30">|</span>
-                        <span class="text-[10px] font-bold uppercase tracking-wider instructor-link" style="color: var(--accent-purple)">${linkifyInstructor(e.instructor, e.type)}</span>
+                        <span class="text-[10px] font-bold uppercase tracking-wider instructor-link" style="color: var(--accent-purple)">${linkifyInstructor(e.instructor)}</span>
                     </div>
-                                        <h3 class="text-lg sm:text-xl font-bold leading-tight mb-1" style="color: var(--text-primary)">${e.title}</h3>
+                    <h3 class="text-lg sm:text-xl font-bold leading-tight mb-1" style="color: var(--text-primary)">${e.title}</h3>
                     <p class="text-[13px] leading-snug font-normal opacity-90" style="color: var(--text-secondary)">${e.description}</p>
                 `;
                 list.appendChild(card);
             });
+            updateDateOnScroll(); // Set initial date
         }
+
+        function updateDateOnScroll() {
+            const cards = document.querySelectorAll('.event-card');
+            const dateDisplay = document.getElementById('sticky-date-display');
+            const headerHeight = document.querySelector('.main-header').offsetHeight;
+            
+            let currentVisibleDate = "";
+            for (let card of cards) {
+                const rect = card.getBoundingClientRect();
+                // If the top of the card is near or above the bottom of the header
+                if (rect.top <= headerHeight + 100) {
+                    currentVisibleDate = card.dataset.date;
+                } else {
+                    break;
+                }
+            }
+            if (currentVisibleDate) dateDisplay.innerText = currentVisibleDate;
+        }
+
+        window.addEventListener('scroll', updateDateOnScroll);
 
         window.addEventListener('load', () => {
             initSettings();
             updateFilterUI();
             renderEvents();
+            updateHeaderHeight();
         });
+        
+        window.addEventListener('resize', updateHeaderHeight);
     </script>
 
     <footer class="fixed bottom-0 left-0 right-0 z-50 px-4 pb-6 pt-2 pointer-events-none">
