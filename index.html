@@ -21,6 +21,8 @@
             
             <div class="flex flex-wrap items-center gap-3 mb-4">
                 <button onclick="setFilter('all')" id="filter-all" class="filter-chip active">All</button>
+                <button onclick="setFilter('fav')" id="filter-fav" class="filter-chip fav-active">★</button>
+                
                 <button onclick="setFilter('milonga')" id="filter-milonga" class="filter-chip">Milongas</button>
                 <button onclick="setFilter('beg')" id="filter-beg" class="filter-chip">Beg</button>
                 <button onclick="setFilter('int')" id="filter-int" class="filter-chip">Int</button>
@@ -62,8 +64,10 @@
     <script>
         const FILTER_KEY = 'valentango_filter_pref';
         const THEME_KEY = 'valentango_theme_pref';
+        const FAV_KEY = 'valentango_favorites';
         
         let currentFilters = ['all'];
+        let favorites = [];
 
         function initSettings() {
             try {
@@ -72,12 +76,30 @@
                     currentFilters = JSON.parse(savedFilters);
                 }
 
+                const savedFavs = localStorage.getItem(FAV_KEY);
+                if (savedFavs) {
+                    favorites = JSON.parse(savedFavs);
+                }
+
                 const isLight = localStorage.getItem(THEME_KEY) === 'true';
                 if (isLight) {
                     document.body.classList.add('light-mode');
                     updateThemeButton(true);
                 }
             } catch (e) { console.warn("Storage access denied", e); }
+        }
+
+        function toggleFavorite(id) {
+            const index = favorites.indexOf(id);
+            if (index > -1) {
+                favorites.splice(index, 1);
+            } else {
+                favorites.push(id);
+            }
+            try {
+                localStorage.setItem(FAV_KEY, JSON.stringify(favorites));
+            } catch (e) {}
+            renderEvents();
         }
 
         function toggleTheme() {
@@ -166,17 +188,12 @@
             
             const linkifyInstructor = (instructorStr, eventType) => {
                 if (!instructorStr || typeof nameToUrl === 'undefined') return instructorStr;
-
-                // 1. Exact Match First (e.g. "Robin & Dagny")
                 if (nameToUrl[instructorStr]) {
                     return `<a href="${nameToUrl[instructorStr]}" target="_blank" class="hover:underline">${instructorStr}</a>`;
                 }
-
-                // 2. DJ Logic (Check if "DJ" exists in the string)
                 if (instructorStr.toUpperCase().includes("DJ")) {
                     let djHandled = instructorStr;
                     Object.keys(nameToUrl).forEach(name => {
-                        // Look for the name part within the string
                         if (instructorStr.includes(name)) {
                             const link = `<a href="${nameToUrl[name]}" target="_blank" class="hover:underline">${name}</a>`;
                             djHandled = djHandled.replace(name, link);
@@ -184,13 +201,9 @@
                     });
                     return djHandled;
                 }
-
-                // 3. Partial Match (ONLY for Milongas)
                 if (eventType === 'milonga') {
                     let finalStr = instructorStr;
-                    // Sort keys by length descending to match "Robin & Dagny" before "Robin"
                     const sortedNames = Object.keys(nameToUrl).sort((a, b) => b.length - a.length);
-                    
                     sortedNames.forEach(name => {
                         if (finalStr.includes(name) && !finalStr.includes(`>${name}</a>`)) {
                             const link = `<a href="${nameToUrl[name]}" target="_blank" class="hover:underline">${name}</a>`;
@@ -199,7 +212,6 @@
                     });
                     return finalStr;
                 }
-
                 return instructorStr;
             };
 
@@ -208,7 +220,9 @@
                 if (currentFilters.includes('all')) {
                     matchesCategory = true;
                 } else {
-                    matchesCategory = currentFilters.some(f => {
+                    matchesCategory = currentFilters.every(f => {
+                        if (f === 'all') return true;
+                        if (f === 'fav') return favorites.includes(e.id);
                         if (f === 'milonga') return e.type === 'milonga';
                         return (e.level || "").toLowerCase() === f.toLowerCase();
                     });
@@ -232,6 +246,8 @@
             let lastDate = '';
             filtered.forEach(e => {
                 const dateStr = formatDate(e.start);
+                const isFav = favorites.includes(e.id);
+                
                 if(dateStr !== lastDate) {
                     const h = document.createElement('div');
                     h.className = 'date-divider';
@@ -248,7 +264,12 @@
                             <span class="text-xs font-black tracking-tighter ${e.type === 'milonga' ? 'milonga-indicator' : 'class-indicator'}">${formatTime(e.start)} - ${formatTime(e.end)}</span>
                             <span class="room-pill">${e.room}</span>
                         </div>
-                        <span class="price-text">${e.price}</span>
+                        <div class="flex items-center gap-3">
+                            <span class="price-text">${e.price}</span>
+                            <span onclick="toggleFavorite(${e.id})" class="fav-star text-lg ${isFav ? 'text-amber-400' : 'text-zinc-600 opacity-30'}">
+                                ${isFav ? '★' : '★'}
+                            </span>
+                        </div>
                     </div>
                     <h3 class="text-xl font-bold leading-tight mb-2" style="color: var(--text-primary)">${e.title}</h3>
                     <div class="flex items-center gap-2 mb-4">
@@ -260,7 +281,6 @@
                 `;
                 list.appendChild(card);
             });
-            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         window.addEventListener('load', () => {
