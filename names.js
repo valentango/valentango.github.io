@@ -4,6 +4,7 @@
             "Paloma & Maxi": "http://www.palomaymaximiliano.com",
             "Cecilia Gonzalez": "https://tangomotion.com",
             "Hugo & Celina": "https://hugoandcelina.com/",
+            "Celina": "https://hugoandcelina.com/",
             "Florencia & Marcos": "http://www.marcosyflorencia.com/",
             "Avik": "http://www.a2tango.com/teachers.html",
             "Koichiro": "https://www.pghtango.com/about-pgh-tango",
