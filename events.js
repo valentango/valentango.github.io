@@ -54,6 +54,8 @@ const events = [
     { title: "The Power of Two", start: "2026-02-15T17:00:00", end: "2026-02-15T18:15:00", level: "Adv Couples", instructor: "Florencia & Marcos", room: "Morrison", price: "$35", type: "class", description: "Parallel, Crossed, Linear & Circular Walks. Mastering floor navigation." },
 
     // --- MILONGAS & PRACTICAS ---
+        { title: "Pre-Valentango Bookend Milonga", start: "2026-02-10T19:30:00", end: "2026-02-10T10:30:00", level: "All", instructor: "DJ Steve Correl", room: "Shabu Studios", price: "$12", type: "milonga", description: "" },
+
     { title: "Opening Traditional Milonga", start: "2026-02-11T21:00:00", end: "2026-02-12T01:00:00", level: "All", instructor: "DJ Michael D / Host Becky", room: "Cascade", price: "$20", type: "milonga", description: "" },
     { title: "Mixed Alt/Trad Milonga", start: "2026-02-12T14:00:00", end: "2026-02-12T17:00:00", level: "All", instructor: "DJ Victoria / Host Jurni", room: "Cascade", price: "$20", type: "milonga", description: "Afternoon social dancing with a blend of styles." },
     { title: "Mixed Alt/Trad Milonga", start: "2026-02-12T14:00:00", end: "2026-02-12T17:00:00", level: "All", instructor: "DJ Brick / Host Gaylord", room: "Cascade", price: "$20", type: "milonga", description: "" },
@@ -78,5 +80,7 @@ const events = [
     { title: "Closing Traditional Milonga", start: "2026-02-15T21:00:00", end: "2026-02-16T02:00:00", level: "All", instructor: "DJ Koichiro / Host Becky", room: "Main Ballroom", price: "$25", type: "milonga", description: "" },
     { title: "Late Night Traditional (With Cake & Coffee)", start: "2026-02-16T02:00:00", end: "2026-02-16T06:00:00", level: "All", instructor: "DJ Michael D / Host Leonor", room: "Cascade", price: "$20", type: "milonga", description: "" },
     { title: "Mixed Alt/Trad Milonga", start: "2026-02-16T14:00:00", end: "2026-02-16T17:00:00", level: "All", instructor: "DJ Rob / Host Becky", room: "Cascade", price: "$20", type: "milonga", description: "" },
-    { title: "Final Guided Practica", start: "2026-02-16T14:30:00", end: "2026-02-16T16:00:00", level: "All", instructor: "All Instructors", room: "Morrison", price: "Free", type: "milonga", description: "P&M, C&H, L&Y, R&D, M&F, C" }
+    { title: "Final Guided Practica", start: "2026-02-16T14:30:00", end: "2026-02-16T16:00:00", level: "All", instructor: "All Instructors", room: "Morrison", price: "Free", type: "milonga", description: "" },
+    { title: "Post-Valentango Bookend Milonga", start: "2026-02-17T19:30:00", end: "2026-02-17T10:30:00", level: "All", instructor: "DJ Stephen Bradley", room: "Shabu Studios", price: "$12", type: "milonga", description: "" }
+
 ];
