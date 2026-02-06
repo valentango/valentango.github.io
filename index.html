@@ -226,24 +226,31 @@
             };
 
             const filtered = events.filter(e => {
-                let matchesCategory = false;
-                if (currentFilters.includes('all')) {
-                    matchesCategory = true;
-                } else {
-                    matchesCategory = currentFilters.every(f => {
-                        if (f === 'all') return true;
-                        if (f === 'fav') return favorites.includes(e.id);
-                        if (f === 'milonga') return e.type === 'milonga';
-                        return (e.level || "").toLowerCase() === f.toLowerCase();
-                    });
+                // 1. Handle "Favorites" (Exclusive AND logic)
+                if (currentFilters.includes('fav') && !favorites.includes(e.id)) {
+                    return false;
                 }
 
+                // 2. Handle Search (Exclusive AND logic)
                 const matchesSearch = !searchTerm || 
                     e.title.toLowerCase().includes(searchTerm) || 
                     (e.instructor || "").toLowerCase().includes(searchTerm) || 
                     (e.description || "").toLowerCase().includes(searchTerm);
+                
+                if (!matchesSearch) return false;
 
-                return matchesCategory && matchesSearch;
+                // 3. Handle Categories (Inclusive OR logic)
+                if (currentFilters.includes('all')) return true;
+
+                // Filter out 'fav' from the categories list to check level/type
+                const activeCategories = currentFilters.filter(f => f !== 'fav');
+                if (activeCategories.length === 0) return true;
+
+                return activeCategories.some(f => {
+                    if (f === 'milonga') return e.type === 'milonga';
+                    return (e.level || "").toLowerCase() === f.toLowerCase();
+                });
+
             }).sort((a,b) => new Date(a.start) - new Date(b.start));
 
             updateFilterUI();
@@ -276,9 +283,9 @@
                         </div>
                         <div class="flex items-center gap-3">
                             <span class="price-text">${e.price}</span>
-                            <span onclick="toggleFavorite(${e.id})" class="fav-star text-lg ${isFav ? 'text-amber-400' : 'text-zinc-600 opacity-30'}">
-                                ${isFav ? '★' : '★'}
-                            </span>
+                            <div onclick="toggleFavorite(${e.id})" class="fav-star text-lg ${isFav ? 'text-amber-400' : 'text-zinc-600 opacity-30'} cursor-pointer">
+                                ★
+                            </div>
                         </div>
                     </div>
                     <h3 class="text-xl font-bold leading-tight mb-2" style="color: var(--text-primary)">${e.title}</h3>
