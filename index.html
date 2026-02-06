@@ -20,32 +20,34 @@
 <body class="transition-colors">
 
     <header class="main-header sticky top-0 z-40">
-        <div class="max-w-2xl mx-auto px-6 pb-6">
-            <div class="flex justify-between items-start mb-6">
+        <div class="max-w-2xl mx-auto px-4 pb-4">
+            <div class="flex justify-between items-center mb-4 pt-2">
                 <div>
-                    <h1 class="text-3xl font-extrabold tracking-tight">ValenTango 2026</h1>
-                    <p class="text-xs uppercase tracking-widest font-bold mt-1" style="color: var(--text-secondary)">Portland</p>
+                    <h1 class="text-2xl sm:text-3xl font-extrabold tracking-tight">ValenTango 2026</h1>
+                    <p class="text-[10px] uppercase tracking-widest font-bold" style="color: var(--text-secondary)">Portland, OR</p>
                 </div>
                 <button onclick="toggleTheme()" class="theme-toggle" id="theme-btn">Light Mode</button>
             </div>
             
-            <div class="flex flex-wrap items-center gap-3 mb-3">
+            <div class="flex flex-wrap items-center gap-2 mb-3">
                 <button onclick="setFilter('all')" id="filter-all" class="filter-chip active">All</button>
                 <button onclick="setFilter('fav')" id="filter-fav" class="filter-chip fav-active">★</button>
                 <button onclick="setFilter('milonga')" id="filter-milonga" class="filter-chip">Milongas</button>
+                <span class="text-[10px] opacity-30">|</span>
                 <button onclick="setFilter('beg')" id="filter-beg" class="filter-chip">Beg</button>
                 <button onclick="setFilter('int')" id="filter-int" class="filter-chip">Int</button>
                 <button onclick="setFilter('adv')" id="filter-adv" class="filter-chip">Adv</button>
                 <button onclick="setFilter('advCouples')" id="filter-advCouples" class="filter-chip">Adv Couples</button>
-                <button onclick="setFilter('tuesday')" id="filter-tuesday" class="filter-chip !text-[10px] uppercase">Tue</button>
-                <button onclick="setFilter('wednesday')" id="filter-wednesday" class="filter-chip !text-[10px] uppercase">Wed</button>
-                <button onclick="setFilter('thursday')" id="filter-thursday" class="filter-chip !text-[10px] uppercase">Thu</button>
-                <button onclick="setFilter('friday')" id="filter-friday" class="filter-chip !text-[10px] uppercase">Fri</button>
-                <button onclick="setFilter('saturday')" id="filter-saturday" class="filter-chip !text-[10px] uppercase">Sat</button>
-                <button onclick="setFilter('sunday')" id="filter-sunday" class="filter-chip !text-[10px] uppercase">Sun</button>
-                <button onclick="setFilter('monday')" id="filter-monday" class="filter-chip !text-[10px] uppercase">Mon</button>
+                <span class="text-[10px] opacity-30">|</span>
+                <button onclick="setFilter('tuesday')" id="filter-tuesday" class="filter-chip uppercase">Tue</button>
+                <button onclick="setFilter('wednesday')" id="filter-wednesday" class="filter-chip uppercase">Wed</button>
+                <button onclick="setFilter('thursday')" id="filter-thursday" class="filter-chip uppercase">Thu</button>
+                <button onclick="setFilter('friday')" id="filter-friday" class="filter-chip uppercase">Fri</button>
+                <button onclick="setFilter('saturday')" id="filter-saturday" class="filter-chip uppercase">Sat</button>
+                <button onclick="setFilter('sunday')" id="filter-sunday" class="filter-chip uppercase">Sun</button>
+                <button onclick="setFilter('monday')" id="filter-monday" class="filter-chip uppercase">Mon</button>
                 
-                <button onclick="clearFilters()" id="clear-filters" class="text-[11px] font-black uppercase tracking-widest px-2 text-rose-500 hidden whitespace-nowrap bg-transparent border-none cursor-pointer">
+                <button onclick="clearFilters()" id="clear-filters" class="text-[10px] font-black uppercase tracking-widest px-2 text-rose-500 hidden whitespace-nowrap bg-transparent border-none cursor-pointer">
                     Clear ×
                 </button>
             </div>
@@ -55,16 +57,15 @@
                     type="text" 
                     id="search-input" 
                     oninput="renderEvents()" 
-                    placeholder="Search by topic, instructor, or description..." 
-                    class="w-full bg-[var(--chip-bg)] border border-[var(--chip-border)] text-[var(--text-primary)] pl-4 pr-12 py-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)] transition-all"
+                    placeholder="Search by topic, instructor..." 
+                    class="w-full bg-[var(--chip-bg)] border border-[var(--chip-border)] text-[var(--text-primary)] pl-4 pr-10 py-2.5 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)] transition-all"
                 />
                 <button 
                     onclick="clearSearch()" 
                     id="clear-search-btn"
-                    class="absolute right-3 p-2 text-[var(--text-secondary)] hover:text-rose-500 transition-colors hidden"
-                    title="Clear search"
+                    class="absolute right-2 p-2 text-[var(--text-secondary)] hover:text-rose-500 transition-colors hidden"
                 >
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
@@ -72,7 +73,7 @@
         </div>
     </header>
 
-    <main id="event-list" class="max-w-2xl mx-auto px-6 pt-4"></main>
+    <main id="event-list" class="max-w-2xl mx-auto px-4 pt-2"></main>
 
     <script src="events.js"></script>
     <script src="names.js"></script>
@@ -89,15 +90,9 @@
         function initSettings() {
             try {
                 const savedFilters = localStorage.getItem(FILTER_KEY);
-                if (savedFilters) {
-                    currentFilters = JSON.parse(savedFilters);
-                }
-
+                if (savedFilters) currentFilters = JSON.parse(savedFilters);
                 const savedFavs = localStorage.getItem(FAV_KEY);
-                if (savedFavs) {
-                    favorites = JSON.parse(savedFavs);
-                }
-
+                if (savedFavs) favorites = JSON.parse(savedFavs);
                 const isLight = localStorage.getItem(THEME_KEY) === 'true';
                 if (isLight) {
                     document.body.classList.add('light-mode');
@@ -108,23 +103,16 @@
 
         function toggleFavorite(id) {
             const index = favorites.indexOf(id);
-            if (index > -1) {
-                favorites.splice(index, 1);
-            } else {
-                favorites.push(id);
-            }
-            try {
-                localStorage.setItem(FAV_KEY, JSON.stringify(favorites));
-            } catch (e) {}
+            if (index > -1) favorites.splice(index, 1);
+            else favorites.push(id);
+            try { localStorage.setItem(FAV_KEY, JSON.stringify(favorites)); } catch (e) {}
             renderEvents();
         }
 
         function toggleTheme() {
             const isLight = document.body.classList.toggle('light-mode');
             updateThemeButton(isLight);
-            try {
-                localStorage.setItem(THEME_KEY, isLight);
-            } catch (e) { console.warn("Could not save theme", e); }
+            try { localStorage.setItem(THEME_KEY, isLight); } catch (e) {}
         }
 
         function updateThemeButton(isLight) {
@@ -132,7 +120,9 @@
             if (btn) btn.innerText = isLight ? "Dark Mode" : "Light Mode";
         }
 
-        function formatTime(iso) { return new Date(iso).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }); }
+        function formatTime(iso) { 
+            return new Date(iso).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }).replace(' ', ''); 
+        }
         function formatDate(iso) { return new Date(iso).toLocaleDateString([], { weekday: 'long', month: 'short', day: 'numeric' }); }
 
         function setFilter(filter) {
@@ -140,20 +130,11 @@
                 currentFilters = ['all'];
             } else {
                 currentFilters = currentFilters.filter(f => f !== 'all');
-
-                if (currentFilters.includes(filter)) {
-                    currentFilters = currentFilters.filter(f => f !== filter);
-                } else {
-                    currentFilters.push(filter);
-                }
-
+                if (currentFilters.includes(filter)) currentFilters = currentFilters.filter(f => f !== filter);
+                else currentFilters.push(filter);
                 if (currentFilters.length === 0) currentFilters = ['all'];
             }
-
-            try { 
-                localStorage.setItem(FILTER_KEY, JSON.stringify(currentFilters)); 
-            } catch (e) {}
-            
+            try { localStorage.setItem(FILTER_KEY, JSON.stringify(currentFilters)); } catch (e) {}
             updateFilterUI();
             renderEvents();
         }
@@ -165,28 +146,17 @@
             input.focus();
         }
 
-        function clearFilters() {
-            // Decoupled: Clearing category chips no longer resets search box text
-            setFilter('all');
-        }
+        function clearFilters() { setFilter('all'); }
 
         function updateFilterUI() {
             document.querySelectorAll('.filter-chip').forEach(chip => {
                 const filterId = chip.id.replace('filter-', '');
-                if (currentFilters.includes(filterId)) {
-                    chip.classList.add('active');
-                } else {
-                    chip.classList.remove('active');
-                }
+                if (currentFilters.includes(filterId)) chip.classList.add('active');
+                else chip.classList.remove('active');
             });
-
             const clearFiltersBtn = document.getElementById('clear-filters');
-            // Logic Clean-up: Clear button only appears if category filters (not search) are active
-            if (currentFilters.length === 1 && currentFilters.includes('all')) {
-                clearFiltersBtn.classList.add('hidden');
-            } else {
-                clearFiltersBtn.classList.remove('hidden');
-            }
+            if (currentFilters.length === 1 && currentFilters.includes('all')) clearFiltersBtn.classList.add('hidden');
+            else clearFiltersBtn.classList.remove('hidden');
         }
 
         function renderEvents() {
@@ -195,73 +165,39 @@
             const clearSearchBtn = document.getElementById('clear-search-btn');
             const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
 
-            if (clearSearchBtn) {
-                searchTerm.length > 0 ? clearSearchBtn.classList.remove('hidden') : clearSearchBtn.classList.add('hidden');
-            }
-
+            if (clearSearchBtn) searchTerm.length > 0 ? clearSearchBtn.classList.remove('hidden') : clearSearchBtn.classList.add('hidden');
             if (!list || typeof events === 'undefined') return;
 
             list.innerHTML = '';
             
             const linkifyInstructor = (instructorStr, eventType) => {
                 if (!instructorStr || typeof nameToUrl === 'undefined') return instructorStr;
-                if (nameToUrl[instructorStr]) {
-                    return `<a href="${nameToUrl[instructorStr]}" target="_blank" class="hover:underline">${instructorStr}</a>`;
-                }
-                if (instructorStr.toUpperCase().includes("DJ")) {
-                    let djHandled = instructorStr;
-                    Object.keys(nameToUrl).forEach(name => {
-                        if (instructorStr.includes(name)) {
-                            const link = `<a href="${nameToUrl[name]}" target="_blank" class="hover:underline">${name}</a>`;
-                            djHandled = djHandled.replace(name, link);
-                        }
-                    });
-                    return djHandled;
-                }
-                if (eventType === 'milonga') {
-                    let finalStr = instructorStr;
-                    const sortedNames = Object.keys(nameToUrl).sort((a, b) => b.length - a.length);
-                    sortedNames.forEach(name => {
-                        if (finalStr.includes(name) && !finalStr.includes(`>${name}</a>`)) {
-                            const link = `<a href="${nameToUrl[name]}" target="_blank" class="hover:underline">${name}</a>`;
-                            finalStr = finalStr.replace(name, link);
-                        }
-                    });
-                    return finalStr;
-                }
-                return instructorStr;
+                if (nameToUrl[instructorStr]) return `<a href="${nameToUrl[instructorStr]}" target="_blank">${instructorStr}</a>`;
+                
+                let finalStr = instructorStr;
+                const sortedNames = Object.keys(nameToUrl).sort((a, b) => b.length - a.length);
+                sortedNames.forEach(name => {
+                    if (finalStr.includes(name) && !finalStr.includes(`>${name}</a>`)) {
+                        finalStr = finalStr.replace(name, `<a href="${nameToUrl[name]}" target="_blank">${name}</a>`);
+                    }
+                });
+                return finalStr;
             };
 
             const filtered = events.filter(e => {
-                // 1. Favorites check
-                if (currentFilters.includes('fav') && !favorites.includes(e.id)) {
-                    return false;
-                }
-
-                // 2. Search check
-                const matchesSearch = !searchTerm || 
-                    e.title.toLowerCase().includes(searchTerm) || 
-                    (e.instructor || "").toLowerCase().includes(searchTerm) || 
-                    (e.description || "").toLowerCase().includes(searchTerm);
-                
+                if (currentFilters.includes('fav') && !favorites.includes(e.id)) return false;
+                const matchesSearch = !searchTerm || e.title.toLowerCase().includes(searchTerm) || 
+                    (e.instructor || "").toLowerCase().includes(searchTerm) || (e.description || "").toLowerCase().includes(searchTerm);
                 if (!matchesSearch) return false;
-
-                // 3. Day and Category logic
                 if (currentFilters.includes('all')) return true;
-
                 const activeFilters = currentFilters.filter(f => f !== 'fav');
                 if (activeFilters.length === 0) return true;
-
                 const selectedDays = activeFilters.filter(f => DAYS.includes(f));
                 const selectedCats = activeFilters.filter(f => !DAYS.includes(f));
-
-                // If days are selected, event must match one of them
                 if (selectedDays.length > 0) {
                     const eventDay = new Date(e.start).toLocaleDateString([], { weekday: 'long' }).toLowerCase();
                     if (!selectedDays.includes(eventDay)) return false;
                 }
-
-                // If categories are selected, event must match one of them
                 if (selectedCats.length > 0) {
                     const matchesCat = selectedCats.some(f => {
                         if (f === 'milonga') return e.type === 'milonga';
@@ -269,15 +205,13 @@
                     });
                     if (!matchesCat) return false;
                 }
-
                 return true;
-
             }).sort((a,b) => new Date(a.start) - new Date(b.start));
 
             updateFilterUI();
 
             if (filtered.length === 0) {
-                list.innerHTML = `<div class="text-center py-20 text-[var(--text-secondary)]">No events match your criteria.</div>`;
+                list.innerHTML = `<div class="text-center py-20 text-[var(--text-secondary)] opacity-50">No matches found.</div>`;
                 return;
             }
 
@@ -297,25 +231,25 @@
                 const card = document.createElement('div');
                 card.className = 'event-card';
                 card.innerHTML = `
-                    <div class="flex justify-between items-center mb-4">
-                        <div class="flex items-center gap-3">
-                            <span class="text-xs font-black tracking-tighter ${e.type === 'milonga' ? 'milonga-indicator' : 'class-indicator'}">${formatTime(e.start)} - ${formatTime(e.end)}</span>
-                            <span class="room-pill">${e.room}</span>
+                    <div class="flex justify-between items-start mb-2">
+                        <div class="flex flex-col gap-1">
+                            <span class="text-[11px] font-black tracking-tight ${e.type === 'milonga' ? 'milonga-indicator' : 'class-indicator'}">${formatTime(e.start)}—${formatTime(e.end)}</span>
                         </div>
-                        <div class="flex items-center gap-3">
-                            <span class="price-text">${e.price}</span>
-                            <div onclick="toggleFavorite(${e.id})" class="fav-star text-lg ${isFav ? 'text-amber-400' : 'text-zinc-600 opacity-30'} cursor-pointer">
-                                ★
-                            </div>
+                        <div class="flex flex-col items-end gap-1">
+                            <div onclick="toggleFavorite(${e.id})" class="fav-star ${isFav ? 'text-amber-400' : 'text-zinc-600 opacity-30'}">★</div>
                         </div>
                     </div>
-                    <h3 class="text-xl font-bold leading-tight mb-2" style="color: var(--text-primary)">${e.title}</h3>
-                    <div class="flex items-center gap-2 mb-4">
-                        <span class="text-[11px] font-bold uppercase tracking-wider" style="color: var(--text-secondary)">${e.level === 'advCouples' ? 'ADV COUPLES' : e.level}</span>
-                        <span style="color: var(--border-color)">•</span>
-                        <span class="text-[11px] font-bold uppercase tracking-wider instructor-link" style="color: var(--accent-purple)">${linkifyInstructor(e.instructor, e.type)}</span>
+                    <div class="flex flex-wrap items-center gap-x-2 gap-y-1 mb-2">
+                        <span class="text-[10px] font-bold uppercase tracking-wider opacity-70" style="color: var(--text-secondary)">${e.level === 'advCouples' ? 'ADV COUPLES' : e.level}</span>
+                        <span class="text-[10px] opacity-30">|</span>
+                        <span class="room-pill">${e.room}</span>
+                        <span class="text-[10px] opacity-30">|</span>
+                        <span class="price-text">${e.price}</span>
+                        <span class="text-[10px] opacity-30">|</span>
+                        <span class="text-[10px] font-bold uppercase tracking-wider instructor-link" style="color: var(--accent-purple)">${linkifyInstructor(e.instructor, e.type)}</span>
                     </div>
-                    <p class="text-[14px] leading-relaxed font-normal" style="color: var(--text-secondary)">${e.description}</p>
+                                        <h3 class="text-lg sm:text-xl font-bold leading-tight mb-1" style="color: var(--text-primary)">${e.title}</h3>
+                    <p class="text-[13px] leading-snug font-normal opacity-90" style="color: var(--text-secondary)">${e.description}</p>
                 `;
                 list.appendChild(card);
             });
@@ -328,17 +262,11 @@
         });
     </script>
 
-    <footer class="fixed bottom-0 left-0 right-0 z-50 px-6 pb-8 pt-4 pointer-events-none">
-        <div class="max-w-2xl mx-auto flex justify-center gap-4 pointer-events-auto">
-            <a href="how.html" class="footer-link">
-                <span>?</span>
-            </a>
-            <a href="https://valentango.us/parking/" target="_blank" class="footer-link">
-                <span>Parking</span>
-            </a>
-            <a href="map.html" class="footer-link">
-                <span>Venue Map</span>
-            </a>
+    <footer class="fixed bottom-0 left-0 right-0 z-50 px-4 pb-6 pt-2 pointer-events-none">
+        <div class="max-w-2xl mx-auto flex justify-center gap-3 pointer-events-auto">
+            <a href="how.html" class="footer-link"><span>?</span></a>
+            <a href="https://valentango.us/parking/" target="_blank" class="footer-link"><span>Parking</span></a>
+            <a href="map.html" class="footer-link"><span>Venue Map</span></a>
         </div>
     </footer>
 </body>
