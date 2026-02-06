@@ -195,3 +195,25 @@ body.light-mode .footer-link {
 main#event-list {
     padding-bottom: 120px;
 }
+
+/* styles.css */
+#search-input::placeholder {
+    color: var(--text-secondary);
+    opacity: 0.6;
+}
+
+/* Optional: Adjust the sticky header height calculation for the date divider */
+/* Since the header is now taller, we increase the top offset of the date dividers */
+.date-divider {
+    top: 218px; /* Adjusted from 154px to account for the search bar */
+}
+
+  .instructor-link {
+            color: var(--accent-purple);
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+        .instructor-link:hover {
+            text-decoration: underline;
+            opacity: 0.8;
+        }

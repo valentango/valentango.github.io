@@ -19,7 +19,8 @@
                 <button onclick="toggleTheme()" class="theme-toggle" id="theme-btn">Light Mode</button>
             </div>
             
-            <div class="flex flex-wrap items-center gap-3">                <button onclick="setFilter('all')" id="filter-all" class="filter-chip active">All</button>
+            <div class="flex flex-wrap items-center gap-3 mb-4">
+                <button onclick="setFilter('all')" id="filter-all" class="filter-chip active">All</button>
                 <button onclick="setFilter('milonga')" id="filter-milonga" class="filter-chip">Milongas</button>
                 <button onclick="setFilter('beg')" id="filter-beg" class="filter-chip">Beg</button>
                 <button onclick="setFilter('int')" id="filter-int" class="filter-chip">Int</button>
@@ -27,7 +28,27 @@
                 <button onclick="setFilter('advCouples')" id="filter-advCouples" class="filter-chip">Adv Couples</button>
                 
                 <button onclick="clearFilters()" id="clear-filters" class="text-[11px] font-black uppercase tracking-widest px-2 text-rose-500 hidden whitespace-nowrap bg-transparent border-none cursor-pointer">
-                    Clear ×
+                    Clear Filters ×
+                </button>
+            </div>
+
+            <div class="relative flex items-center">
+                <input 
+                    type="text" 
+                    id="search-input" 
+                    oninput="renderEvents()" 
+                    placeholder="Search by topic, instructor, or description..." 
+                    class="w-full bg-[var(--chip-bg)] border border-[var(--chip-border)] text-[var(--text-primary)] pl-4 pr-12 py-3 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)] transition-all"
+                />
+                <button 
+                    onclick="clearSearch()" 
+                    id="clear-search-btn"
+                    class="absolute right-3 p-2 text-[var(--text-secondary)] hover:text-rose-500 transition-colors hidden"
+                    title="Clear search"
+                >
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                    </svg>
                 </button>
             </div>
         </div>
@@ -40,18 +61,15 @@
         const FILTER_KEY = 'valentango_filter_pref';
         const THEME_KEY = 'valentango_theme_pref';
         
-        // State now uses an array to track multiple active filters
         let currentFilters = ['all'];
 
         function initSettings() {
             try {
-                // Filter Init: Parse JSON array from storage
                 const savedFilters = localStorage.getItem(FILTER_KEY);
                 if (savedFilters) {
                     currentFilters = JSON.parse(savedFilters);
                 }
 
-                // Theme Init
                 const isLight = localStorage.getItem(THEME_KEY) === 'true';
                 if (isLight) {
                     document.body.classList.add('light-mode');
@@ -80,18 +98,14 @@
             if (filter === 'all') {
                 currentFilters = ['all'];
             } else {
-                // If we select a category, remove the 'all' state
                 currentFilters = currentFilters.filter(f => f !== 'all');
 
                 if (currentFilters.includes(filter)) {
-                    // Toggle off if already selected
                     currentFilters = currentFilters.filter(f => f !== filter);
                 } else {
-                    // Add to active filters
                     currentFilters.push(filter);
                 }
 
-                // Default back to 'all' if list becomes empty
                 if (currentFilters.length === 0) currentFilters = ['all'];
             }
 
@@ -103,12 +117,19 @@
             renderEvents();
         }
 
+        function clearSearch() {
+            const input = document.getElementById('search-input');
+            input.value = '';
+            renderEvents();
+            input.focus();
+        }
+
         function clearFilters() {
+            document.getElementById('search-input').value = '';
             setFilter('all');
         }
 
         function updateFilterUI() {
-            // Update Chip active states
             document.querySelectorAll('.filter-chip').forEach(chip => {
                 const filterId = chip.id.replace('filter-', '');
                 if (currentFilters.includes(filterId)) {
@@ -118,31 +139,54 @@
                 }
             });
 
-            // Toggle visibility of the Clear button
-            const clearBtn = document.getElementById('clear-filters');
-            if (currentFilters.includes('all')) {
-                clearBtn.classList.add('hidden');
+            const clearFiltersBtn = document.getElementById('clear-filters');
+            const hasSearch = document.getElementById('search-input')?.value.length > 0;
+            if (currentFilters.includes('all') && !hasSearch) {
+                clearFiltersBtn.classList.add('hidden');
             } else {
-                clearBtn.classList.remove('hidden');
+                clearFiltersBtn.classList.remove('hidden');
             }
         }
 
         function renderEvents() {
             const list = document.getElementById('event-list');
+            const searchInput = document.getElementById('search-input');
+            const clearSearchBtn = document.getElementById('clear-search-btn');
+            const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
+
+            if (clearSearchBtn) {
+                searchTerm.length > 0 ? clearSearchBtn.classList.remove('hidden') : clearSearchBtn.classList.add('hidden');
+            }
+
             if (!list || typeof events === 'undefined') return;
 
             list.innerHTML = '';
             
             const filtered = events.filter(e => {
-                // If 'all' is active, show everything
-                if (currentFilters.includes('all')) return true;
-                
-                // Show event if it matches ANY of the selected filters
-                return currentFilters.some(f => {
-                    if (f === 'milonga') return e.type === 'milonga';
-                    return (e.level || "").toLowerCase() === f.toLowerCase();
-                });
+                let matchesCategory = false;
+                if (currentFilters.includes('all')) {
+                    matchesCategory = true;
+                } else {
+                    matchesCategory = currentFilters.some(f => {
+                        if (f === 'milonga') return e.type === 'milonga';
+                        return (e.level || "").toLowerCase() === f.toLowerCase();
+                    });
+                }
+
+                const matchesSearch = !searchTerm || 
+                    e.title.toLowerCase().includes(searchTerm) || 
+                    (e.instructor || "").toLowerCase().includes(searchTerm) || 
+                    (e.description || "").toLowerCase().includes(searchTerm);
+
+                return matchesCategory && matchesSearch;
             }).sort((a,b) => new Date(a.start) - new Date(b.start));
+
+            updateFilterUI();
+
+            if (filtered.length === 0) {
+                list.innerHTML = `<div class="text-center py-20 text-[var(--text-secondary)]">No events match your criteria.</div>`;
+                return;
+            }
 
             let lastDate = '';
             filtered.forEach(e => {
@@ -183,7 +227,7 @@
             renderEvents();
         });
     </script>
-    HTML
+
     <footer class="fixed bottom-0 left-0 right-0 z-50 px-6 pb-8 pt-4 pointer-events-none">
         <div class="max-w-2xl mx-auto flex justify-center gap-4 pointer-events-auto">
             <a href="https://valentango.us/parking/" target="_blank" class="footer-link">
