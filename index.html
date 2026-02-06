@@ -13,18 +13,22 @@
         <div class="max-w-2xl mx-auto px-6 pb-6">
             <div class="flex justify-between items-start mb-6">
                 <div>
-                    <h1 class="text-3xl font-extrabold tracking-tight">ValenTango</h1>
+                    <h1 class="text-3xl font-extrabold tracking-tight">ValenTango Schedule</h1>
                     <p class="text-xs uppercase tracking-widest font-bold mt-1" style="color: var(--text-secondary)">Portland 2026</p>
                 </div>
                 <button onclick="toggleTheme()" class="theme-toggle" id="theme-btn">Light Mode</button>
             </div>
             
-            <div class="flex gap-3 overflow-x-auto no-scrollbar -mx-6 px-6">
-                <button onclick="setFilter('all')" id="filter-all" class="filter-chip active">All</button>
+            <div class="flex flex-wrap items-center gap-3">                <button onclick="setFilter('all')" id="filter-all" class="filter-chip active">All</button>
                 <button onclick="setFilter('milonga')" id="filter-milonga" class="filter-chip">Milongas</button>
-                <button onclick="setFilter('Beg')" id="filter-Beg" class="filter-chip">Beg</button>
-                <button onclick="setFilter('Int')" id="filter-Int" class="filter-chip">Int</button>
-                <button onclick="setFilter('Adv')" id="filter-Adv" class="filter-chip">Adv</button>
+                <button onclick="setFilter('beg')" id="filter-beg" class="filter-chip">Beg</button>
+                <button onclick="setFilter('int')" id="filter-int" class="filter-chip">Int</button>
+                <button onclick="setFilter('adv')" id="filter-adv" class="filter-chip">Adv</button>
+                <button onclick="setFilter('advCouples')" id="filter-advCouples" class="filter-chip">Adv Couples</button>
+                
+                <button onclick="clearFilters()" id="clear-filters" class="text-[11px] font-black uppercase tracking-widest px-2 text-rose-500 hidden whitespace-nowrap bg-transparent border-none cursor-pointer">
+                    Clear ×
+                </button>
             </div>
         </div>
     </header>
@@ -36,13 +40,16 @@
         const FILTER_KEY = 'valentango_filter_pref';
         const THEME_KEY = 'valentango_theme_pref';
         
-        let currentFilter = 'all';
+        // State now uses an array to track multiple active filters
+        let currentFilters = ['all'];
 
         function initSettings() {
             try {
-                // Filter Init
-                const savedFilter = localStorage.getItem(FILTER_KEY);
-                if (savedFilter) currentFilter = savedFilter;
+                // Filter Init: Parse JSON array from storage
+                const savedFilters = localStorage.getItem(FILTER_KEY);
+                if (savedFilters) {
+                    currentFilters = JSON.parse(savedFilters);
+                }
 
                 // Theme Init
                 const isLight = localStorage.getItem(THEME_KEY) === 'true';
@@ -70,16 +77,54 @@
         function formatDate(iso) { return new Date(iso).toLocaleDateString([], { weekday: 'long', month: 'short', day: 'numeric' }); }
 
         function setFilter(filter) {
-            currentFilter = filter;
-            try { localStorage.setItem(FILTER_KEY, filter); } catch (e) {}
+            if (filter === 'all') {
+                currentFilters = ['all'];
+            } else {
+                // If we select a category, remove the 'all' state
+                currentFilters = currentFilters.filter(f => f !== 'all');
+
+                if (currentFilters.includes(filter)) {
+                    // Toggle off if already selected
+                    currentFilters = currentFilters.filter(f => f !== filter);
+                } else {
+                    // Add to active filters
+                    currentFilters.push(filter);
+                }
+
+                // Default back to 'all' if list becomes empty
+                if (currentFilters.length === 0) currentFilters = ['all'];
+            }
+
+            try { 
+                localStorage.setItem(FILTER_KEY, JSON.stringify(currentFilters)); 
+            } catch (e) {}
+            
             updateFilterUI();
             renderEvents();
         }
 
+        function clearFilters() {
+            setFilter('all');
+        }
+
         function updateFilterUI() {
-            document.querySelectorAll('.filter-chip').forEach(chip => chip.classList.remove('active'));
-            const activeChip = document.getElementById(`filter-${currentFilter}`);
-            if (activeChip) activeChip.classList.add('active');
+            // Update Chip active states
+            document.querySelectorAll('.filter-chip').forEach(chip => {
+                const filterId = chip.id.replace('filter-', '');
+                if (currentFilters.includes(filterId)) {
+                    chip.classList.add('active');
+                } else {
+                    chip.classList.remove('active');
+                }
+            });
+
+            // Toggle visibility of the Clear button
+            const clearBtn = document.getElementById('clear-filters');
+            if (currentFilters.includes('all')) {
+                clearBtn.classList.add('hidden');
+            } else {
+                clearBtn.classList.remove('hidden');
+            }
         }
 
         function renderEvents() {
@@ -87,10 +132,16 @@
             if (!list || typeof events === 'undefined') return;
 
             list.innerHTML = '';
+            
             const filtered = events.filter(e => {
-                if (currentFilter === 'all') return true;
-                if (currentFilter === 'milonga') return e.type === 'milonga';
-                return (e.level || "").toLowerCase().includes(currentFilter.toLowerCase());
+                // If 'all' is active, show everything
+                if (currentFilters.includes('all')) return true;
+                
+                // Show event if it matches ANY of the selected filters
+                return currentFilters.some(f => {
+                    if (f === 'milonga') return e.type === 'milonga';
+                    return (e.level || "").toLowerCase() === f.toLowerCase();
+                });
             }).sort((a,b) => new Date(a.start) - new Date(b.start));
 
             let lastDate = '';
@@ -116,7 +167,7 @@
                     </div>
                     <h3 class="text-xl font-bold leading-tight mb-2" style="color: var(--text-primary)">${e.title}</h3>
                     <div class="flex items-center gap-2 mb-4">
-                        <span class="text-[11px] font-bold uppercase tracking-wider" style="color: var(--text-secondary)">${e.level}</span>
+                        <span class="text-[11px] font-bold uppercase tracking-wider" style="color: var(--text-secondary)">${e.level === 'advCouples' ? 'ADV COUPLES' : e.level}</span>
                         <span style="color: var(--border-color)">•</span>
                         <span class="text-[11px] font-bold uppercase tracking-wider" style="color: var(--accent-purple)">${e.instructor}</span>
                     </div>
