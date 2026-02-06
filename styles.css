@@ -236,3 +236,26 @@ main#event-list {
     background-color: #fbbf24;
     color: #000;
 }
+
+.fav-star.text-zinc-600 {
+    /* Change from 30% to 100% opacity to make it prominent */
+    opacity: 1 !important; 
+    /* Change color to a bright zinc or off-white */
+    color: #c4c4cd; 
+    /* Create a "light border" effect using a drop shadow */
+    filter: drop-shadow(0 0 1px rgba(255, 255, 255, 0.8));
+}
+
+/* Specific styling for Light Mode so it doesn't look too bright on white */
+body.light-mode .fav-star.text-zinc-600 {
+    opacity: 0.4 !important;
+    color: var(--text-secondary);
+    filter: none;
+}
+
+/* Keep the selected star bright amber but add a glow for prominence */
+.fav-star.text-amber-400 {
+    opacity: 1 !important;
+    filter: drop-shadow(0 0 3px rgba(251, 191, 36, 0.4));
+    transform: scale(1.1); /* Slightly larger when selected */
+}
