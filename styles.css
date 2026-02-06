@@ -1,12 +1,173 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
-body { font-family: 'Inter', sans-serif; background-color: #000; color: #fff; }
-.filter-chip { transition: all 0.2s; border: 1px solid #333; cursor: pointer; }
-.filter-chip.active { background-color: #a855f7; border-color: #a855f7; color: white; }
-.event-card { border-bottom: 1px solid #1f2937; transition: background-color 0.2s; }
-.event-card:hover { background-color: #0a0a0a; }
-.details-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: #000; z-index: 50; display: none; overflow-y: auto; }
-.room-tag { font-size: 0.65rem; padding: 2px 6px; border-radius: 4px; background: #222; color: #aaa; text-transform: uppercase; }
-.milonga-type { border-left: 4px solid #a855f7; }
-.class-type { border-left: 4px solid #3b82f6; }
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+:root {
+    --ios-bg: #000000;
+    --ios-card: #0a0a0a;
+    --accent-purple: #a855f7;
+    --accent-blue: #3b82f6;
+    --safe-bottom: env(safe-area-inset-bottom);
+}
+
+* {
+    -webkit-tap-highlight-color: transparent;
+    box-sizing: border-box;
+}
+
+body { 
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; 
+    background-color: var(--ios-bg); 
+    color: #fff; 
+    margin: 0;
+    -webkit-font-smoothing: antialiased;
+}
+
+.safe-area-bottom {
+    padding-bottom: calc(2rem + var(--safe-bottom));
+}
+
+/* Header Glassmorphism */
+.main-header {
+    background-color: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-bottom: 0.5px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Filters */
+.filter-container {
+    overflow: hidden;
+}
+
+.filter-chip { 
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid #27272a; 
+    background: transparent;
+    color: #a1a1aa;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 8px 16px;
+    border-radius: 99px;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.filter-chip.active { 
+    background-color: #fff; 
+    border-color: #fff; 
+    color: #000; 
+}
+
+/* Event Cards */
+.event-card { 
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 0.5px solid #18181b; 
+    transition: background-color 0.2s;
+    cursor: pointer;
+}
+
+.event-card:active {
+    background-color: #111111;
+}
+
+.room-tag { 
+    font-size: 9px; 
+    font-weight: 700;
+    padding: 2px 6px; 
+    border-radius: 4px; 
+    background: #18181b; 
+    color: #71717a; 
+    text-transform: uppercase; 
+    letter-spacing: 0.05em;
+}
+
+.milonga-type { border-left: 3px solid var(--accent-purple); }
+.class-type { border-left: 3px solid var(--accent-blue); }
+
+.price-tag {
+    font-size: 12px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    color: #d4d4d8;
+    background: #18181b;
+    padding: 4px 8px;
+    border-radius: 6px;
+}
+
+.date-divider {
+    padding: 24px 20px 8px 20px;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--accent-purple);
+    background: linear-gradient(to bottom, #000, #000);
+    position: sticky;
+    top: 110px; /* Aligned with header height */
+    z-index: 30;
+}
+
+/* Details View Overlay */
+.details-overlay { 
+    position: fixed; 
+    top: 0; 
+    left: 0; 
+    right: 0; 
+    bottom: 0; 
+    background: #000; 
+    z-index: 100; 
+    display: none; 
+    overflow-y: auto; 
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    padding-bottom: var(--safe-bottom);
+}
+
+.details-overlay.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.back-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: #71717a;
+    font-size: 15px;
+    font-weight: 500;
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+}
+
+.back-button:active {
+    color: #fff;
+}
+
+.detail-label {
+    text-transform: uppercase;
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    color: #52525b;
+    margin-bottom: 6px;
+}
+
+.badge {
+    padding: 4px 12px;
+    border-radius: 99px;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.badge-milonga { background: rgba(168, 85, 247, 0.15); color: #c084fc; }
+.badge-class { background: rgba(59, 130, 246, 0.15); color: #60a5fa; }
+
+/* Utilities */
 .no-scrollbar::-webkit-scrollbar { display: none; }
 .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }

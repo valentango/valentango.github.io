@@ -2,38 +2,42 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>ValenTango 2026 Full Schedule</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="styles.css"></link>
+    <link rel="stylesheet" href="styles.css">
 </head>
-<body class="pb-20">
+<body class="safe-area-bottom">
 
-    <header class="p-6 sticky top-0 bg-black/80 backdrop-blur-md z-40 border-b border-zinc-800">
-        <div class="max-w-4xl mx-auto flex justify-between items-center mb-6">
-            <div>
-                <h1 class="text-2xl font-bold tracking-tight">ValenTango 2026</h1>
-                <p class="text-zinc-500 text-xs">Complete Schedule • Portland, OR</p>
+    <header class="main-header sticky top-0 z-40">
+        <div class="max-w-4xl mx-auto px-5 pt-6 pb-4">
+            <div class="flex justify-between items-end mb-5">
+                <div>
+                    <h1 class="text-2xl font-bold tracking-tight text-white">ValenTango 2026</h1>
+                    <p class="text-zinc-400 text-[11px] uppercase tracking-wider font-medium">Portland, OR • Feb 11-16</p>
+                </div>
+                <div id="clock" class="text-[10px] font-mono text-zinc-500 uppercase pb-1">Feb 5, 2026</div>
             </div>
-            <div id="clock" class="text-[10px] font-mono text-zinc-600 uppercase">Feb 5, 2026</div>
-        </div>
-        
-        <div class="max-w-4xl mx-auto flex gap-2 overflow-x-auto no-scrollbar">
-            <div onclick="setFilter('all')" id="filter-all" class="filter-chip px-4 py-1.5 rounded-full text-xs active flex-shrink-0">All Events</div>
-            <div onclick="setFilter('milonga')" id="filter-milonga" class="filter-chip px-4 py-1.5 rounded-full text-xs flex-shrink-0">Milongas</div>
-            <div onclick="setFilter('Beg')" id="filter-Beg" class="filter-chip px-4 py-1.5 rounded-full text-xs flex-shrink-0">Beginner</div>
-            <div onclick="setFilter('Int')" id="filter-Int" class="filter-chip px-4 py-1.5 rounded-full text-xs flex-shrink-0">Intermediate</div>
-            <div onclick="setFilter('Adv')" id="filter-Adv" class="filter-chip px-4 py-1.5 rounded-full text-xs flex-shrink-0">Advanced</div>
+            
+            <div class="filter-container -mx-5 px-5">
+                <div class="flex gap-2 overflow-x-auto no-scrollbar pb-1">
+                    <button onclick="setFilter('all')" id="filter-all" class="filter-chip active">All Events</button>
+                    <button onclick="setFilter('milonga')" id="filter-milonga" class="filter-chip">Milongas</button>
+                    <button onclick="setFilter('Beg')" id="filter-Beg" class="filter-chip">Beginner</button>
+                    <button onclick="setFilter('Int')" id="filter-Int" class="filter-chip">Intermediate</button>
+                    <button onclick="setFilter('Adv')" id="filter-Adv" class="filter-chip">Advanced</button>
+                </div>
+            </div>
         </div>
     </header>
 
-    <main id="event-list" class="px-4 max-w-4xl mx-auto mt-4"></main>
+    <main id="event-list" class="max-w-4xl mx-auto"></main>
 
-    <div id="details-view" class="details-overlay p-6">
-        <div class="max-w-2xl mx-auto">
-            <button onclick="closeDetails()" class="mb-8 text-zinc-500 hover:text-white flex items-center gap-2 text-sm">
-                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
-                Back to Schedule
+    <div id="details-view" class="details-overlay">
+        <div class="max-w-2xl mx-auto px-6 pt-12 pb-24">
+            <button onclick="closeDetails()" class="back-button mb-8">
+                <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg>
+                <span>Back to Schedule</span>
             </button>
             <div id="details-content"></div>
         </div>
@@ -41,6 +45,7 @@
 
     <script src="events.js"></script>
     <script>
+
         let currentFilter = 'all';
 
         function formatTime(iso) { return new Date(iso).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); }
@@ -68,25 +73,28 @@
                 const dateStr = formatDate(e.start);
                 if(dateStr !== lastDate) {
                     const h = document.createElement('div');
-                    h.className = 'text-purple-500 font-bold text-[10px] uppercase tracking-widest mt-12 mb-4 border-b border-zinc-900 pb-2';
+                    h.className = 'date-divider';
                     h.innerText = dateStr;
                     list.appendChild(h);
                     lastDate = dateStr;
                 }
 
                 const card = document.createElement('div');
-                card.className = `event-card p-4 flex flex-col md:flex-row justify-between items-start md:items-center gap-4 cursor-pointer ${e.type === 'milonga' ? 'milonga-type' : 'class-type'}`;
+                card.className = `event-card ${e.type === 'milonga' ? 'milonga-type' : 'class-type'}`;
                 card.onclick = () => showDetails(e.id);
                 card.innerHTML = `
-                    <div class="flex-1">
-                        <div class="flex items-center gap-3 mb-1">
-                            <span class="text-zinc-500 font-mono text-[10px]">${formatTime(e.start)}</span>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-center gap-2 mb-1.5">
+                            <span class="text-zinc-500 font-mono text-[11px] font-medium">${formatTime(e.start)}</span>
                             <span class="room-tag">${e.room}</span>
                         </div>
-                        <div class="text-sm font-semibold text-zinc-100">${e.title}</div>
-                        <div class="text-[10px] text-zinc-500 mt-1 uppercase tracking-tight">${e.level} • ${e.instructor}</div>
+                        <h3 class="text-[15px] font-semibold text-white leading-snug mb-1 truncate">${e.title}</h3>
+                        <p class="text-[11px] text-zinc-500 font-medium uppercase tracking-tight">${e.level} • ${e.instructor}</p>
                     </div>
-                    <div class="text-xs font-mono text-zinc-400 bg-zinc-900 px-3 py-1 rounded-full">${e.price}</div>
+                    <div class="flex flex-col items-end gap-1">
+                        <span class="price-tag">${e.price}</span>
+                        <svg class="text-zinc-700" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m9 18 6-6-6-6"/></svg>
+                    </div>
                 `;
                 list.appendChild(card);
             });
@@ -95,42 +103,46 @@
         function showDetails(id) {
             const e = events.find(x => x.id === id);
             const content = document.getElementById('details-content');
-            // Check if room name already ends with "Ballroom" to avoid duplication
-            const roomDisplay = e.room;
             
             content.innerHTML = `
-                <div class="mb-6"><span class="px-3 py-1 rounded-full text-[10px] font-bold uppercase tracking-wider ${e.type === 'milonga' ? 'bg-purple-900/40 text-purple-400' : 'bg-blue-900/40 text-blue-400'}">${e.type}</span></div>
-                <h2 class="text-3xl font-bold mb-4 leading-tight">${e.title}</h2>
-                <div class="grid grid-cols-2 gap-y-6 gap-x-12 mb-10 pb-10 border-b border-zinc-900">
+                <div class="mb-6"><span class="badge ${e.type === 'milonga' ? 'badge-milonga' : 'badge-class'}">${e.type}</span></div>
+                <h2 class="text-3xl font-bold mb-6 leading-tight tracking-tight">${e.title}</h2>
+                <div class="grid grid-cols-2 gap-y-8 gap-x-4 mb-10 pb-10 border-b border-zinc-900">
                     <div>
-                        <div class="text-zinc-600 uppercase text-[9px] font-bold tracking-widest mb-1">Time</div>
-                        <div class="text-sm">${formatDate(e.start)}<br/>${formatTime(e.start)} - ${formatTime(e.end)}</div>
+                        <div class="detail-label">Time</div>
+                        <div class="text-base text-white">${formatDate(e.start)}<br/>${formatTime(e.start)} - ${formatTime(e.end)}</div>
                     </div>
                     <div>
-                        <div class="text-zinc-600 uppercase text-[9px] font-bold tracking-widest mb-1">Location</div>
-                        <div class="text-sm">${roomDisplay}</div>
+                        <div class="detail-label">Location</div>
+                        <div class="text-base text-white">${e.room}</div>
                     </div>
                     <div>
-                        <div class="text-zinc-600 uppercase text-[9px] font-bold tracking-widest mb-1">Instructor/Host</div>
-                        <div class="text-sm font-medium text-purple-400">${e.instructor}</div>
+                        <div class="detail-label">Instructor/Host</div>
+                        <div class="text-base font-semibold text-purple-400">${e.instructor}</div>
                     </div>
                     <div>
-                        <div class="text-zinc-600 uppercase text-[9px] font-bold tracking-widest mb-1">Price</div>
-                        <div class="text-sm font-mono text-zinc-300">${e.price}</div>
+                        <div class="detail-label">Price</div>
+                        <div class="text-base font-mono text-zinc-300">${e.price}</div>
                     </div>
                 </div>
                 <div class="space-y-4">
-                    <h3 class="text-zinc-600 uppercase text-[9px] font-bold tracking-widest">Description</h3>
-                    <p class="text-zinc-300 leading-relaxed text-lg font-light italic">${e.description}</p>
+                    <h3 class="detail-label">Description</h3>
+                    <p class="text-zinc-400 leading-relaxed text-lg font-light">${e.description}</p>
                 </div>
             `;
-            document.getElementById('details-view').style.display = 'block';
+            const el = document.getElementById('details-view');
+            el.style.display = 'block';
+            setTimeout(() => el.classList.add('active'), 10);
             document.body.style.overflow = 'hidden';
         }
 
         function closeDetails() {
-            document.getElementById('details-view').style.display = 'none';
-            document.body.style.overflow = 'auto';
+            const el = document.getElementById('details-view');
+            el.classList.remove('active');
+            setTimeout(() => {
+                el.style.display = 'none';
+                document.body.style.overflow = 'auto';
+            }, 300);
         }
 
         window.onload = renderEvents;
