@@ -29,7 +29,7 @@
                 <button onclick="toggleTheme()" class="theme-toggle" id="theme-btn">Light Mode</button>
             </div>
             
-            <div class="flex flex-wrap items-center gap-3 mb-4">
+            <div class="flex flex-wrap items-center gap-3 mb-3">
                 <button onclick="setFilter('all')" id="filter-all" class="filter-chip active">All</button>
                 <button onclick="setFilter('fav')" id="filter-fav" class="filter-chip fav-active">★</button>
                 
@@ -38,6 +38,16 @@
                 <button onclick="setFilter('int')" id="filter-int" class="filter-chip">Int</button>
                 <button onclick="setFilter('adv')" id="filter-adv" class="filter-chip">Adv</button>
                 <button onclick="setFilter('advCouples')" id="filter-advCouples" class="filter-chip">Adv Couples</button>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2 mb-4">
+                <button onclick="setFilter('tuesday')" id="filter-tuesday" class="filter-chip !text-[10px] uppercase">Tue</button>
+                <button onclick="setFilter('wednesday')" id="filter-wednesday" class="filter-chip !text-[10px] uppercase">Wed</button>
+                <button onclick="setFilter('thursday')" id="filter-thursday" class="filter-chip !text-[10px] uppercase">Thu</button>
+                <button onclick="setFilter('friday')" id="filter-friday" class="filter-chip !text-[10px] uppercase">Fri</button>
+                <button onclick="setFilter('saturday')" id="filter-saturday" class="filter-chip !text-[10px] uppercase">Sat</button>
+                <button onclick="setFilter('sunday')" id="filter-sunday" class="filter-chip !text-[10px] uppercase">Sun</button>
+                <button onclick="setFilter('monday')" id="filter-monday" class="filter-chip !text-[10px] uppercase">Mon</button>
                 
                 <button onclick="clearFilters()" id="clear-filters" class="text-[11px] font-black uppercase tracking-widest px-2 text-rose-500 hidden whitespace-nowrap bg-transparent border-none cursor-pointer">
                     Clear ×
@@ -59,7 +69,7 @@
                     title="Clear search"
                 >
                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                     </svg>
                 </button>
             </div>
@@ -75,6 +85,7 @@
         const FILTER_KEY = 'valentango_filter_pref';
         const THEME_KEY = 'valentango_theme_pref';
         const FAV_KEY = 'valentango_favorites';
+        const DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
         
         let currentFilters = ['all'];
         let favorites = [];
@@ -159,7 +170,7 @@
         }
 
         function clearFilters() {
-            document.getElementById('search-input').value = '';
+            // Decoupled: Clearing category chips no longer resets search box text
             setFilter('all');
         }
 
@@ -174,8 +185,8 @@
             });
 
             const clearFiltersBtn = document.getElementById('clear-filters');
-            const hasSearch = document.getElementById('search-input')?.value.length > 0;
-            if (currentFilters.includes('all') && !hasSearch) {
+            // Logic Clean-up: Clear button only appears if category filters (not search) are active
+            if (currentFilters.length === 1 && currentFilters.includes('all')) {
                 clearFiltersBtn.classList.add('hidden');
             } else {
                 clearFiltersBtn.classList.remove('hidden');
@@ -226,12 +237,12 @@
             };
 
             const filtered = events.filter(e => {
-                // 1. Handle "Favorites" (Exclusive AND logic)
+                // 1. Favorites check
                 if (currentFilters.includes('fav') && !favorites.includes(e.id)) {
                     return false;
                 }
 
-                // 2. Handle Search (Exclusive AND logic)
+                // 2. Search check
                 const matchesSearch = !searchTerm || 
                     e.title.toLowerCase().includes(searchTerm) || 
                     (e.instructor || "").toLowerCase().includes(searchTerm) || 
@@ -239,17 +250,31 @@
                 
                 if (!matchesSearch) return false;
 
-                // 3. Handle Categories (Inclusive OR logic)
+                // 3. Day and Category logic
                 if (currentFilters.includes('all')) return true;
 
-                // Filter out 'fav' from the categories list to check level/type
-                const activeCategories = currentFilters.filter(f => f !== 'fav');
-                if (activeCategories.length === 0) return true;
+                const activeFilters = currentFilters.filter(f => f !== 'fav');
+                if (activeFilters.length === 0) return true;
 
-                return activeCategories.some(f => {
-                    if (f === 'milonga') return e.type === 'milonga';
-                    return (e.level || "").toLowerCase() === f.toLowerCase();
-                });
+                const selectedDays = activeFilters.filter(f => DAYS.includes(f));
+                const selectedCats = activeFilters.filter(f => !DAYS.includes(f));
+
+                // If days are selected, event must match one of them
+                if (selectedDays.length > 0) {
+                    const eventDay = new Date(e.start).toLocaleDateString([], { weekday: 'long' }).toLowerCase();
+                    if (!selectedDays.includes(eventDay)) return false;
+                }
+
+                // If categories are selected, event must match one of them
+                if (selectedCats.length > 0) {
+                    const matchesCat = selectedCats.some(f => {
+                        if (f === 'milonga') return e.type === 'milonga';
+                        return (e.level || "").toLowerCase() === f.toLowerCase();
+                    });
+                    if (!matchesCat) return false;
+                }
+
+                return true;
 
             }).sort((a,b) => new Date(a.start) - new Date(b.start));
 
