@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>How to Use</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        .step-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 1rem;
+            padding: 1.5rem;
+        }
+    </style>
+</head>
+<body class="transition-colors bg-[var(--ios-bg)] text-[var(--text-primary)] min-h-screen">
+
+    <header class="sticky top-0 z-40 bg-[var(--header-bg)] backdrop-blur-md">
+        <div class="max-w-2xl mx-auto px-6 py-8">
+            <a href="index.html" class="text-[var(--accent-purple)] font-medium flex items-center gap-1 hover:opacity-80 transition-opacity mb-2">
+                <span class="text-xl">←</span> Back
+            </a>
+            <h1 class="text-4xl font-black tracking-tight italic">How to Use</h1>
+        </div>
+    </header>
+
+    <main class="max-w-2xl mx-auto px-6 pb-12">
+        
+        <p class="text-lg mb-8 text-[var(--text-secondary)]">
+            Want to keep your schedule handy? Add this site to your phone.
+        </p>
+
+        <div class="mb-10 p-5 rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] space-y-4">
+            <h2 class="text-xl font-bold italic text-[var(--accent-purple)]">Privacy</h2>
+            <p class="text-sm leading-relaxed opacity-90">
+                Your favorite events are saved **locally to your phone**. To make sure you don't lose your list when you close your browser, follow the steps below to "install" it first! 
+            </p>
+        </div>
+
+        <div class="step-card mb-10">
+            <h2 class="text-2xl font-bold mb-4">iPhone users</h2>
+            <ul class="space-y-4">
+                <li class="flex items-start gap-3">
+                    <span class="bg-[var(--accent-purple)] text-black rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">1</span>
+                    <span>Tap the <strong>Share</strong> button (the little square with an arrow).</span>
+                </li>
+                 <li class="flex items-start gap-3">
+                    <span class="bg-[var(--accent-purple)] text-black rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">1</span>
+                    <span>Click on <strong>More...</strong> button.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="bg-[var(--accent-purple)] text-black rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">2</span>
+                    <span>Find <strong>Add to Home Screen</strong> in the list.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="bg-[var(--accent-purple)] text-black rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">3</span>
+                    <span>Hit <strong>Add</strong> and you're good to go!</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="step-card">
+            <h2 class="text-2xl font-bold mb-4">Android users</h2>
+            <ul class="space-y-4">
+                <li class="flex items-start gap-3">
+                    <span class="bg-[var(--accent-purple)] text-black rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">1</span>
+                    <span>Tap the <strong>three dots</strong> in the corner.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="bg-[var(--accent-purple)] text-black rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">2</span>
+                    <span>Pick <strong>Install app</strong> or <strong>Add to Home screen</strong>.</span>
+                </li>
+                <li class="flex items-start gap-3">
+                    <span class="bg-[var(--accent-purple)] text-black rounded-full w-6 h-6 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">3</span>
+                    <span>Confirm it, and check your app drawer!</span>
+                </li>
+            </ul>
+        </div>
+
+        <footer class="mt-12 pt-8 border-t border-[var(--border-color)] text-center">
+            <p class="text-xs text-[var(--text-secondary)] italic">
+                We don't track you. No details are shared or stored anywhere outside your own phone. 
+                Made with love from Salem, OR.
+            </p>
+        </footer>
+
+    </main>
+
+    <script>
+        const THEME_KEY = 'valentango_theme_pref';
+        if (localStorage.getItem(THEME_KEY) === 'true') {
+            document.body.classList.add('light-mode');
+        }
+    </script>
+</body>
+</html>
