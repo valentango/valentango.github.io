@@ -1,9 +1,10 @@
  const nameToUrl = {
             "Robin & Dagny": "https://www.facebook.com/robinthomastango",
             "Roxana & Cesar": "https://youtu.be/6wZbMCAeGGk?si=glY3ONv8d-DBEXMh",
+            "Cesar": "https://youtu.be/6wZbMCAeGGk?si=glY3ONv8d-DBEXMh",
             "Paloma & Maxi": "http://www.palomaymaximiliano.com",
             "Cecilia Gonzalez": "https://tangomotion.com",
-            "Hugo & Celina": "https://hugoandcelina.com/",
+            "Celina & Hugo": "https://hugoandcelina.com/",
             "Celina": "https://hugoandcelina.com/",
             "Florencia & Marcos": "http://www.marcosyflorencia.com/",
             "DJ Avik": "http://www.a2tango.com/teachers.html",

@@ -208,12 +208,15 @@ main#event-list {
     top: 218px; /* Adjusted from 154px to account for the search bar */
 }
 
-  .instructor-link {
-            color: var(--accent-purple);
-            text-decoration: none;
-            transition: opacity 0.2s;
-        }
-        .instructor-link:hover {
-            text-decoration: underline;
-            opacity: 0.8;
-        }
+.instructor-link a {
+    color: var(--accent-purple) !important; /* Optional: ensures color stays purple */
+    text-decoration: underline !important;
+    text-decoration-style: solid; /* Ensures it's not dotted/dashed */
+    text-underline-offset: 3px;   /* Makes it look cleaner, like your other links */
+    transition: opacity 0.2s;
+}
+
+.instructor-link a:hover {
+    opacity: 0.8;
+    text-decoration: underline !important;
+}
