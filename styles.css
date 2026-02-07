@@ -90,6 +90,14 @@ body {
     color: var(--chip-active-text); 
 }
 
+        #filter-wrapper {
+            background-color: var(--chip-bg);
+            margin-left: -1rem;
+            margin-right: -1rem;
+            padding: 1rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
 .event-card { 
     padding: 20px;
     margin-bottom: 12px;
@@ -246,6 +254,7 @@ body.light-mode .fav-star.text-zinc-600 {
     opacity: 0;
     margin-bottom: 0;
     pointer-events: none;
+    display:none;
 }
 
 .collapse-toggle {

@@ -20,13 +20,14 @@
                 <button onclick="toggleTheme()" class="theme-toggle" id="theme-btn">Light Mode</button>
             </div>
             
-            <div id="filter-wrapper" class="filter-container mb-3">
+            <div id="filter-wrapper" class="filter-container collapsed">
+                <h2 class="text-[12px] font-black uppercase tracking-widest mb-4">Filter Events By:</h2>
+                
                 <div class="space-y-4 mb-4">
                     <div>
                         <p class="text-[9px] font-black uppercase tracking-widest mb-1.5 opacity-50">General</p>
                         <div class="flex flex-wrap items-center gap-2">
                             <button onclick="setFilter('all')" id="filter-all" class="filter-chip active">All</button>
-                            <button onclick="setFilter('fav')" id="filter-fav" class="filter-chip fav-active">★ Favorites</button>
                             <button onclick="setFilter('milonga')" id="filter-milonga" class="filter-chip">Milongas</button>
                             <button onclick="clearFilters()" id="clear-filters" class="text-[10px] font-black uppercase tracking-widest px-2 text-rose-500 hidden bg-transparent border-none cursor-pointer">
                                 Clear ×
@@ -46,8 +47,7 @@
 
                     <div>
                         <p class="text-[9px] font-black uppercase tracking-widest mb-1.5 opacity-50">Instructors</p>
-                        <div id="instructor-filters" class="flex flex-wrap items-center gap-2">
-                            </div>
+                        <div id="instructor-filters" class="flex flex-wrap items-center gap-2"></div>
                     </div>
 
                     <div>
@@ -71,7 +71,7 @@
                                 id="search-input" 
                                 oninput="renderEvents()" 
                                 placeholder="Search topic or instructor..." 
-                                class="w-full bg-[var(--chip-bg)] border border-[var(--chip-border)] text-[var(--text-primary)] pl-4 pr-10 py-2 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)] transition-all"
+                                class="w-full bg-[var(--card-bg)] border border-[var(--chip-border)] text-[var(--text-primary)] pl-4 pr-10 py-2 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)] transition-all"
                             />
                             <button onclick="clearSearch()" id="clear-search-btn" class="absolute right-2 p-2 text-[var(--text-secondary)] hover:text-rose-500 transition-colors hidden">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -83,7 +83,10 @@
                 </div>
             </div>
 
-            <div class="date-row flex justify-end items-center py-2">
+            <div class="date-row flex justify-between items-center py-2">
+                <button onclick="setFilter('fav')" id="filter-fav" class="filter-chip fav-active py-1 px-3 text-[10px]">
+                    ★ Favorites
+                </button>
                 <button onclick="toggleFilterPane()" class="collapse-toggle" id="pane-toggle-btn">
                     <span id="pane-toggle-text">Filters</span>
                     <svg id="pane-arrow" xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -123,8 +126,8 @@
                     updateThemeButton(true);
                 }
 
-                const paneHidden = localStorage.getItem(PANE_KEY) === 'false';
-                applyPaneState(!paneHidden);
+                const paneVisible = localStorage.getItem(PANE_KEY) === 'true';
+                applyPaneState(paneVisible);
 
                 if (typeof events !== 'undefined') {
                     const instructorSet = new Set();
@@ -173,7 +176,7 @@
                 arrow.classList.remove('collapsed-icon');
             } else {
                 wrapper.classList.add('collapsed');
-                let activeCount = currentFilters.filter(f => f !== 'all').length;
+                let activeCount = currentFilters.filter(f => f !== 'all' && f !== 'fav').length;
                 if (searchInput && searchInput.value.trim().length > 0) activeCount++;
                 btnText.innerText = activeCount > 0 ? `Show Filters ( ${activeCount} )` : "Show Filters";
                 arrow.classList.add('collapsed-icon');
@@ -239,7 +242,11 @@
             input.focus();
         }
 
-        function clearFilters() { setFilter('all'); }
+        function clearFilters() { 
+            const hadFav = currentFilters.includes('fav');
+            currentFilters = hadFav ? ['all', 'fav'] : ['all'];
+            setFilter('all'); 
+        }
 
         function updateFilterUI() {
             document.querySelectorAll('.filter-chip').forEach(chip => {
@@ -250,8 +257,9 @@
             });
 
             const clearFiltersBtn = document.getElementById('clear-filters');
-            if (currentFilters.length === 1 && currentFilters.includes('all')) clearFiltersBtn.classList.add('hidden');
-            else clearFiltersBtn.classList.remove('hidden');
+            const hasActiveFunctionalFilters = currentFilters.some(f => f !== 'all' && f !== 'fav');
+            if (hasActiveFunctionalFilters) clearFiltersBtn.classList.remove('hidden');
+            else clearFiltersBtn.classList.add('hidden');
         }
 
         function renderEvents() {
@@ -262,7 +270,7 @@
             if (!list || typeof events === 'undefined') return;
 
             list.innerHTML = '';
-            let lastDate = ""; // Track date changes
+            let lastDate = ""; 
 
             const linkifyInstructor = (instructorStr) => {
                 if (!instructorStr || typeof nameToUrl === 'undefined') return instructorStr;
@@ -281,12 +289,15 @@
                 const matchesSearch = !searchTerm || e.title.toLowerCase().includes(searchTerm) || 
                     (e.instructor || "").toLowerCase().includes(searchTerm) || (e.description || "").toLowerCase().includes(searchTerm);
                 if (!matchesSearch) return false;
-                if (currentFilters.includes('all')) return true;
+                if (currentFilters.length === 1 && currentFilters.includes('all')) return true;
+                if (currentFilters.length === 1 && currentFilters.includes('fav')) return true;
 
                 const activeFilters = currentFilters.filter(f => f !== 'fav');
+                if (activeFilters.length === 0 || (activeFilters.length === 1 && activeFilters.includes('all'))) return true;
+
                 const selectedDays = activeFilters.filter(f => DAYS.includes(f));
                 const selectedInstructors = activeFilters.filter(f => dynamicInstructors.includes(f));
-                const selectedCats = activeFilters.filter(f => !DAYS.includes(f) && !dynamicInstructors.includes(f));
+                const selectedCats = activeFilters.filter(f => !DAYS.includes(f) && !dynamicInstructors.includes(f) && f !== 'all');
 
                 if (selectedDays.length > 0) {
                     const eventDay = new Date(e.start).toLocaleDateString([], { weekday: 'long' }).toLowerCase();
@@ -309,15 +320,12 @@
 
             filtered.forEach(e => {
                 const dateObj = new Date(e.start);
-                // Long date format for the divider
                 const fullDate = dateObj.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' });
-                // Short date for the card indicator
-                const shortDate = dateObj.toLocaleDateString([], { weekday: 'short'});
 
-                // Add Divider if date changes
                 if (fullDate !== lastDate) {
                     const divider = document.createElement('div');
-                    divider.className = 'py-4 mt-6 border-b border-[var(--border-color)] mb-4';
+                    // Reduced margin-top and vertical padding for a tighter layout
+                    divider.className = 'py-2 mt-2 border-b border-[var(--border-color)] mb-4';
                     divider.innerHTML = `<h2 class="text-xs font-black uppercase tracking-[0.2em] opacity-50">${fullDate}</h2>`;
                     list.appendChild(divider);
                     lastDate = fullDate;
