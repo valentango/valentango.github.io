@@ -83,10 +83,7 @@
                 </div>
             </div>
 
-            <div class="date-row flex justify-between items-center py-2">
-                <div id="sticky-date-display" class="date-display">
-                    Schedule
-                </div>
+            <div class="date-row flex justify-end items-center py-2">
                 <button onclick="toggleFilterPane()" class="collapse-toggle" id="pane-toggle-btn">
                     <span id="pane-toggle-text">Filters</span>
                     <svg id="pane-arrow" xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -129,7 +126,6 @@
                 const paneHidden = localStorage.getItem(PANE_KEY) === 'false';
                 applyPaneState(!paneHidden);
 
-                // Initialize dynamic instructor list from events
                 if (typeof events !== 'undefined') {
                     const instructorSet = new Set();
                     events.forEach(e => {
@@ -215,7 +211,6 @@
         function formatTime(iso) { 
             return new Date(iso).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' }).replace(' ', ''); 
         }
-        function formatDate(iso) { return new Date(iso).toLocaleDateString([], { weekday: 'long', month: 'short', day: 'numeric' }); }
 
         function setFilter(filter) {
             if (filter === 'all') {
@@ -247,10 +242,8 @@
         function clearFilters() { setFilter('all'); }
 
         function updateFilterUI() {
-            // Standard filters
             document.querySelectorAll('.filter-chip').forEach(chip => {
                 let filterId = chip.id.replace('filter-', '');
-                // Handle instructor IDs that replaced spaces with underscores
                 filterId = filterId.replace(/_/g, ' ');
                 if (currentFilters.includes(filterId)) chip.classList.add('active');
                 else chip.classList.remove('active');
@@ -264,17 +257,13 @@
         function renderEvents() {
             const list = document.getElementById('event-list');
             const searchInput = document.getElementById('search-input');
-            const clearSearchBtn = document.getElementById('clear-search-btn');
             const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
-
-            const wrapper = document.getElementById('filter-wrapper');
-            if (wrapper && wrapper.classList.contains('collapsed')) applyPaneState(false);
-
-            if (clearSearchBtn) searchTerm.length > 0 ? clearSearchBtn.classList.remove('hidden') : clearSearchBtn.classList.add('hidden');
+            
             if (!list || typeof events === 'undefined') return;
 
             list.innerHTML = '';
-            
+            let lastDate = ""; // Track date changes
+
             const linkifyInstructor = (instructorStr) => {
                 if (!instructorStr || typeof nameToUrl === 'undefined') return instructorStr;
                 let finalStr = instructorStr;
@@ -295,8 +284,6 @@
                 if (currentFilters.includes('all')) return true;
 
                 const activeFilters = currentFilters.filter(f => f !== 'fav');
-                if (activeFilters.length === 0) return true;
-
                 const selectedDays = activeFilters.filter(f => DAYS.includes(f));
                 const selectedInstructors = activeFilters.filter(f => dynamicInstructors.includes(f));
                 const selectedCats = activeFilters.filter(f => !DAYS.includes(f) && !dynamicInstructors.includes(f));
@@ -305,14 +292,9 @@
                     const eventDay = new Date(e.start).toLocaleDateString([], { weekday: 'long' }).toLowerCase();
                     if (!selectedDays.includes(eventDay)) return false;
                 }
-                if (selectedInstructors.length > 0) {
-                    if (!selectedInstructors.includes(e.instructor)) return false;
-                }
+                if (selectedInstructors.length > 0 && !selectedInstructors.includes(e.instructor)) return false;
                 if (selectedCats.length > 0) {
-                    const matchesCat = selectedCats.some(f => {
-                        if (f === 'milonga') return e.type === 'milonga';
-                        return (e.level || "").toLowerCase() === f.toLowerCase();
-                    });
+                    const matchesCat = selectedCats.some(f => f === 'milonga' ? e.type === 'milonga' : (e.level || "").toLowerCase() === f.toLowerCase());
                     if (!matchesCat) return false;
                 }
                 return true;
@@ -326,14 +308,29 @@
             }
 
             filtered.forEach(e => {
+                const dateObj = new Date(e.start);
+                // Long date format for the divider
+                const fullDate = dateObj.toLocaleDateString([], { weekday: 'long', month: 'long', day: 'numeric' });
+                // Short date for the card indicator
+                const shortDate = dateObj.toLocaleDateString([], { weekday: 'short'});
+
+                // Add Divider if date changes
+                if (fullDate !== lastDate) {
+                    const divider = document.createElement('div');
+                    divider.className = 'py-4 mt-6 border-b border-[var(--border-color)] mb-4';
+                    divider.innerHTML = `<h2 class="text-xs font-black uppercase tracking-[0.2em] opacity-50">${fullDate}</h2>`;
+                    list.appendChild(divider);
+                    lastDate = fullDate;
+                }
+
                 const isFav = favorites.includes(e.id);
                 const card = document.createElement('div');
                 card.className = 'event-card';
-                card.dataset.date = formatDate(e.start);
+
                 card.innerHTML = `
                     <div class="flex justify-between items-start mb-2">
                         <div class="flex flex-col gap-1">
-                            <span class="text-[11px] font-black tracking-tight ${e.type === 'milonga' ? 'milonga-indicator' : 'class-indicator'}">${formatTime(e.start)}—${formatTime(e.end)}</span>
+                            <span class="text-[11px] font-black tracking-tight ${e.type === 'milonga' ? 'milonga-indicator' : 'class-indicator'}">${formatTime(e.start)}—${formatTime(e.end)} </span>
                         </div>
                         <div class="flex flex-col items-end gap-1">
                             <div onclick="toggleFavorite(${e.id})" class="fav-star ${isFav ? 'text-amber-400' : 'text-zinc-600 opacity-30'}">★</div>
@@ -353,27 +350,8 @@
                 `;
                 list.appendChild(card);
             });
-            updateDateOnScroll();
         }
 
-        function updateDateOnScroll() {
-            const cards = document.querySelectorAll('.event-card');
-            const dateDisplay = document.getElementById('sticky-date-display');
-            const headerHeight = document.querySelector('.main-header').offsetHeight;
-            
-            let currentVisibleDate = "";
-            for (let card of cards) {
-                const rect = card.getBoundingClientRect();
-                if (rect.top <= headerHeight + 100) {
-                    currentVisibleDate = card.dataset.date;
-                } else {
-                    break;
-                }
-            }
-            if (currentVisibleDate) dateDisplay.innerText = currentVisibleDate;
-        }
-
-        window.addEventListener('scroll', updateDateOnScroll);
         window.addEventListener('load', () => {
             initSettings();
             updateFilterUI();
