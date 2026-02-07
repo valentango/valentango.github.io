@@ -45,6 +45,12 @@
                     </div>
 
                     <div>
+                        <p class="text-[9px] font-black uppercase tracking-widest mb-1.5 opacity-50">Instructors</p>
+                        <div id="instructor-filters" class="flex flex-wrap items-center gap-2">
+                            </div>
+                    </div>
+
+                    <div>
                         <p class="text-[9px] font-black uppercase tracking-widest mb-1.5 opacity-50">Days</p>
                         <div class="flex flex-wrap items-center gap-2">
                             <button onclick="setFilter('tuesday')" id="filter-tuesday" class="filter-chip">Tue</button>
@@ -105,6 +111,7 @@
         
         let currentFilters = ['all'];
         let favorites = [];
+        let dynamicInstructors = [];
 
         function initSettings() {
             try {
@@ -121,7 +128,34 @@
 
                 const paneHidden = localStorage.getItem(PANE_KEY) === 'false';
                 applyPaneState(!paneHidden);
+
+                // Initialize dynamic instructor list from events
+                if (typeof events !== 'undefined') {
+                    const instructorSet = new Set();
+                    events.forEach(e => {
+                        if (e.type === 'class' && e.instructor && e.instructor !== "Various") {
+                            instructorSet.add(e.instructor);
+                        }
+                    });
+                    dynamicInstructors = Array.from(instructorSet).sort();
+                    renderInstructorFilters();
+                }
+
             } catch (e) { console.warn("Storage access denied", e); }
+        }
+
+        function renderInstructorFilters() {
+            const container = document.getElementById('instructor-filters');
+            if (!container) return;
+            container.innerHTML = '';
+            dynamicInstructors.forEach(ins => {
+                const btn = document.createElement('button');
+                btn.onclick = () => setFilter(ins);
+                btn.id = `filter-${ins.replace(/\s+/g, '_')}`;
+                btn.className = 'filter-chip';
+                btn.innerText = ins;
+                container.appendChild(btn);
+            });
         }
 
         function toggleFilterPane() {
@@ -143,14 +177,8 @@
                 arrow.classList.remove('collapsed-icon');
             } else {
                 wrapper.classList.add('collapsed');
-                // Calculate chip count (excluding 'all')
                 let activeCount = currentFilters.filter(f => f !== 'all').length;
-                
-                // Add to count if search text is present
-                if (searchInput && searchInput.value.trim().length > 0) {
-                    activeCount++;
-                }
-
+                if (searchInput && searchInput.value.trim().length > 0) activeCount++;
                 btnText.innerText = activeCount > 0 ? `Show Filters ( ${activeCount} )` : "Show Filters";
                 arrow.classList.add('collapsed-icon');
             }
@@ -181,7 +209,7 @@
 
         function updateThemeButton(isLight) {
             const btn = document.getElementById('theme-btn');
-            if (btn) btn.innerText = isLight ? "Dark" : "Light";
+            if (btn) btn.innerText = isLight ? "Dark Mode" : "Light Mode";
         }
 
         function formatTime(iso) { 
@@ -200,7 +228,6 @@
             }
             try { localStorage.setItem(FILTER_KEY, JSON.stringify(currentFilters)); } catch (e) {}
             
-            // Update the "Show Filters" button text if it is currently collapsed
             const wrapper = document.getElementById('filter-wrapper');
             if (wrapper && wrapper.classList.contains('collapsed')) {
                 applyPaneState(false);
@@ -220,11 +247,15 @@
         function clearFilters() { setFilter('all'); }
 
         function updateFilterUI() {
+            // Standard filters
             document.querySelectorAll('.filter-chip').forEach(chip => {
-                const filterId = chip.id.replace('filter-', '');
+                let filterId = chip.id.replace('filter-', '');
+                // Handle instructor IDs that replaced spaces with underscores
+                filterId = filterId.replace(/_/g, ' ');
                 if (currentFilters.includes(filterId)) chip.classList.add('active');
                 else chip.classList.remove('active');
             });
+
             const clearFiltersBtn = document.getElementById('clear-filters');
             if (currentFilters.length === 1 && currentFilters.includes('all')) clearFiltersBtn.classList.add('hidden');
             else clearFiltersBtn.classList.remove('hidden');
@@ -236,11 +267,8 @@
             const clearSearchBtn = document.getElementById('clear-search-btn');
             const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
 
-            // Update filter count on the button if hidden whenever search changes
             const wrapper = document.getElementById('filter-wrapper');
-            if (wrapper && wrapper.classList.contains('collapsed')) {
-                applyPaneState(false);
-            }
+            if (wrapper && wrapper.classList.contains('collapsed')) applyPaneState(false);
 
             if (clearSearchBtn) searchTerm.length > 0 ? clearSearchBtn.classList.remove('hidden') : clearSearchBtn.classList.add('hidden');
             if (!list || typeof events === 'undefined') return;
@@ -265,13 +293,20 @@
                     (e.instructor || "").toLowerCase().includes(searchTerm) || (e.description || "").toLowerCase().includes(searchTerm);
                 if (!matchesSearch) return false;
                 if (currentFilters.includes('all')) return true;
+
                 const activeFilters = currentFilters.filter(f => f !== 'fav');
                 if (activeFilters.length === 0) return true;
+
                 const selectedDays = activeFilters.filter(f => DAYS.includes(f));
-                const selectedCats = activeFilters.filter(f => !DAYS.includes(f));
+                const selectedInstructors = activeFilters.filter(f => dynamicInstructors.includes(f));
+                const selectedCats = activeFilters.filter(f => !DAYS.includes(f) && !dynamicInstructors.includes(f));
+
                 if (selectedDays.length > 0) {
                     const eventDay = new Date(e.start).toLocaleDateString([], { weekday: 'long' }).toLowerCase();
                     if (!selectedDays.includes(eventDay)) return false;
+                }
+                if (selectedInstructors.length > 0) {
+                    if (!selectedInstructors.includes(e.instructor)) return false;
                 }
                 if (selectedCats.length > 0) {
                     const matchesCat = selectedCats.some(f => {
@@ -294,7 +329,7 @@
                 const isFav = favorites.includes(e.id);
                 const card = document.createElement('div');
                 card.className = 'event-card';
-                card.dataset.date = formatDate(e.start); // Store date for scroll tracking
+                card.dataset.date = formatDate(e.start);
                 card.innerHTML = `
                     <div class="flex justify-between items-start mb-2">
                         <div class="flex flex-col gap-1">
@@ -318,7 +353,7 @@
                 `;
                 list.appendChild(card);
             });
-            updateDateOnScroll(); // Set initial date
+            updateDateOnScroll();
         }
 
         function updateDateOnScroll() {
@@ -339,14 +374,12 @@
         }
 
         window.addEventListener('scroll', updateDateOnScroll);
-
         window.addEventListener('load', () => {
             initSettings();
             updateFilterUI();
             renderEvents();
             updateHeaderHeight();
         });
-        
         window.addEventListener('resize', updateHeaderHeight);
     </script>
 
