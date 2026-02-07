@@ -14,7 +14,7 @@
             "DJ Alex Krebs": "https://www.tangoberretin.com/alexkrebs",
             "DJ Steve Correl": "https://www.facebook.com/steve.correl.1/",
             "DJ Stephen Brady": "https://www.facebook.com/stephen.brady/",
-            "DJ Andy Stein": "https://www.facebook.com/andris.stein/",
+            "DJ Andy": "https://www.facebook.com/andris.stein/",
             "DJ Robin": "http://robinthomastango.com/w/robin/",
             "DJ Rob M": "https://www.facebook.com/rob.montango",
             "DJ Michael D": "https://www.facebook.com/michael.daniels.337582"
