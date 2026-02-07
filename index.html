@@ -21,42 +21,59 @@
             </div>
             
             <div id="filter-wrapper" class="filter-container mb-3">
-                <div class="flex flex-wrap items-center gap-2 mb-3">
-                    <button onclick="setFilter('all')" id="filter-all" class="filter-chip active">All</button>
-                    <button onclick="setFilter('fav')" id="filter-fav" class="filter-chip fav-active">★</button>
-                    <button onclick="setFilter('milonga')" id="filter-milonga" class="filter-chip">Milongas</button>
-                    <span class="text-[10px] opacity-30">|</span>
-                    <button onclick="setFilter('beg')" id="filter-beg" class="filter-chip">Beg</button>
-                    <button onclick="setFilter('int')" id="filter-int" class="filter-chip">Int</button>
-                    <button onclick="setFilter('adv')" id="filter-adv" class="filter-chip">Adv</button>
-                    <button onclick="setFilter('advCouples')" id="filter-advCouples" class="filter-chip">Adv Couples</button>
-                    <span class="text-[10px] opacity-30">|</span>
-                    <button onclick="setFilter('tuesday')" id="filter-tuesday" class="filter-chip">Tue</button>
-                    <button onclick="setFilter('wednesday')" id="filter-wednesday" class="filter-chip">Wed</button>
-                    <button onclick="setFilter('thursday')" id="filter-thursday" class="filter-chip">Thu</button>
-                    <button onclick="setFilter('friday')" id="filter-friday" class="filter-chip">Fri</button>
-                    <button onclick="setFilter('saturday')" id="filter-saturday" class="filter-chip">Sat</button>
-                    <button onclick="setFilter('sunday')" id="filter-sunday" class="filter-chip">Sun</button>
-                    <button onclick="setFilter('monday')" id="filter-monday" class="filter-chip">Mon</button>
-                    
-                    <button onclick="clearFilters()" id="clear-filters" class="text-[10px] font-black uppercase tracking-widest px-2 text-rose-500 hidden whitespace-nowrap bg-transparent border-none cursor-pointer">
-                        Clear ×
-                    </button>
-                </div>
+                <div class="space-y-4 mb-4">
+                    <div>
+                        <p class="text-[9px] font-black uppercase tracking-widest mb-1.5 opacity-50">General</p>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <button onclick="setFilter('all')" id="filter-all" class="filter-chip active">All</button>
+                            <button onclick="setFilter('fav')" id="filter-fav" class="filter-chip fav-active">★ Favorites</button>
+                            <button onclick="setFilter('milonga')" id="filter-milonga" class="filter-chip">Milongas</button>
+                            <button onclick="clearFilters()" id="clear-filters" class="text-[10px] font-black uppercase tracking-widest px-2 text-rose-500 hidden bg-transparent border-none cursor-pointer">
+                                Clear ×
+                            </button>
+                        </div>
+                    </div>
 
-                <div class="relative flex items-center">
-                    <input 
-                        type="text" 
-                        id="search-input" 
-                        oninput="renderEvents()" 
-                        placeholder="Search topic or instructor..." 
-                        class="w-full bg-[var(--chip-bg)] border border-[var(--chip-border)] text-[var(--text-primary)] pl-4 pr-10 py-2 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)] transition-all"
-                    />
-                    <button onclick="clearSearch()" id="clear-search-btn" class="absolute right-2 p-2 text-[var(--text-secondary)] hover:text-rose-500 transition-colors hidden">
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                        </svg>
-                    </button>
+                    <div>
+                        <p class="text-[9px] font-black uppercase tracking-widest mb-1.5 opacity-50">Class Levels</p>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <button onclick="setFilter('beg')" id="filter-beg" class="filter-chip">Beg</button>
+                            <button onclick="setFilter('int')" id="filter-int" class="filter-chip">Int</button>
+                            <button onclick="setFilter('adv')" id="filter-adv" class="filter-chip">Adv</button>
+                            <button onclick="setFilter('advCouples')" id="filter-advCouples" class="filter-chip">Adv Couples</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <p class="text-[9px] font-black uppercase tracking-widest mb-1.5 opacity-50">Days</p>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <button onclick="setFilter('tuesday')" id="filter-tuesday" class="filter-chip">Tue</button>
+                            <button onclick="setFilter('wednesday')" id="filter-wednesday" class="filter-chip">Wed</button>
+                            <button onclick="setFilter('thursday')" id="filter-thursday" class="filter-chip">Thu</button>
+                            <button onclick="setFilter('friday')" id="filter-friday" class="filter-chip">Fri</button>
+                            <button onclick="setFilter('saturday')" id="filter-saturday" class="filter-chip">Sat</button>
+                            <button onclick="setFilter('sunday')" id="filter-sunday" class="filter-chip">Sun</button>
+                            <button onclick="setFilter('monday')" id="filter-monday" class="filter-chip">Mon</button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <p class="text-[9px] font-black uppercase tracking-widest mb-1.5 opacity-50">Keywords</p>
+                        <div class="relative flex items-center">
+                            <input 
+                                type="text" 
+                                id="search-input" 
+                                oninput="renderEvents()" 
+                                placeholder="Search topic or instructor..." 
+                                class="w-full bg-[var(--chip-bg)] border border-[var(--chip-border)] text-[var(--text-primary)] pl-4 pr-10 py-2 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)] transition-all"
+                            />
+                            <button onclick="clearSearch()" id="clear-search-btn" class="absolute right-2 p-2 text-[var(--text-secondary)] hover:text-rose-500 transition-colors hidden">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -118,14 +135,23 @@
             const wrapper = document.getElementById('filter-wrapper');
             const btnText = document.getElementById('pane-toggle-text');
             const arrow = document.getElementById('pane-arrow');
+            const searchInput = document.getElementById('search-input');
             
             if (isVisible) {
                 wrapper.classList.remove('collapsed');
-                btnText.innerText = "Hide";
+                btnText.innerText = "Hide Filters";
                 arrow.classList.remove('collapsed-icon');
             } else {
                 wrapper.classList.add('collapsed');
-                btnText.innerText = "Filters";
+                // Calculate chip count (excluding 'all')
+                let activeCount = currentFilters.filter(f => f !== 'all').length;
+                
+                // Add to count if search text is present
+                if (searchInput && searchInput.value.trim().length > 0) {
+                    activeCount++;
+                }
+
+                btnText.innerText = activeCount > 0 ? `Show Filters ( ${activeCount} )` : "Show Filters";
                 arrow.classList.add('collapsed-icon');
             }
             setTimeout(updateHeaderHeight, 350);
@@ -173,6 +199,13 @@
                 if (currentFilters.length === 0) currentFilters = ['all'];
             }
             try { localStorage.setItem(FILTER_KEY, JSON.stringify(currentFilters)); } catch (e) {}
+            
+            // Update the "Show Filters" button text if it is currently collapsed
+            const wrapper = document.getElementById('filter-wrapper');
+            if (wrapper && wrapper.classList.contains('collapsed')) {
+                applyPaneState(false);
+            }
+
             updateFilterUI();
             renderEvents();
         }
@@ -202,6 +235,12 @@
             const searchInput = document.getElementById('search-input');
             const clearSearchBtn = document.getElementById('clear-search-btn');
             const searchTerm = searchInput ? searchInput.value.toLowerCase().trim() : '';
+
+            // Update filter count on the button if hidden whenever search changes
+            const wrapper = document.getElementById('filter-wrapper');
+            if (wrapper && wrapper.classList.contains('collapsed')) {
+                applyPaneState(false);
+            }
 
             if (clearSearchBtn) searchTerm.length > 0 ? clearSearchBtn.classList.remove('hidden') : clearSearchBtn.classList.add('hidden');
             if (!list || typeof events === 'undefined') return;
@@ -290,7 +329,6 @@
             let currentVisibleDate = "";
             for (let card of cards) {
                 const rect = card.getBoundingClientRect();
-                // If the top of the card is near or above the bottom of the header
                 if (rect.top <= headerHeight + 100) {
                     currentVisibleDate = card.dataset.date;
                 } else {
