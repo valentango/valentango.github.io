@@ -4,6 +4,7 @@ const FAV_KEY = 'valentango_favorites';
 const PANE_KEY = 'valentango_pane_visible';
 const DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
 const MUSIC_TYPES = ['trad', 'alt', 'both', 'live'];
+const LEVELS = ['beg', 'int', 'adv', 'advCouples'];
 
 let currentFilters = ['all'];
 let favorites = [];
@@ -124,6 +125,18 @@ function setFilter(filter) {
             currentFilters = currentFilters.filter(f => f !== filter);
         } else {
             currentFilters.push(filter);
+
+            // Logic to clear general filters if a specialized sub-filter is selected
+            const isLevel = LEVELS.includes(filter);
+            const isInstructor = dynamicInstructors.includes(filter);
+            if (isLevel || isInstructor) {
+                currentFilters = currentFilters.filter(f => f !== 'class');
+            }
+
+            const isMusic = MUSIC_TYPES.includes(filter);
+            if (isMusic) {
+                currentFilters = currentFilters.filter(f => f !== 'milonga');
+            }
         }
         if (currentFilters.length === 0) currentFilters = ['all'];
     }
@@ -164,7 +177,6 @@ function updateFilterUI() {
     const hasActive = currentFilters.some(f => f !== 'all' && f !== 'fav');
     clearFiltersBtn?.classList.toggle('hidden', !hasActive);
 
-    // Update search clear button visibility
     const searchInput = document.getElementById('search-input');
     const clearSearchBtn = document.getElementById('clear-search-btn');
     clearSearchBtn?.classList.toggle('hidden', !searchInput?.value.trim());
@@ -210,25 +222,43 @@ function renderEvents() {
         const selectedMusic = activeFilters.filter(f => MUSIC_TYPES.includes(f));
         const selectedCats = activeFilters.filter(f => !DAYS.includes(f) && !dynamicInstructors.includes(f) && !MUSIC_TYPES.includes(f));
 
+        // Filter by Day (Applies to all)
         if (selectedDays.length > 0) {
             const eventDay = new Date(e.start).toLocaleDateString([], { weekday: 'long' }).toLowerCase();
             if (!selectedDays.includes(eventDay)) return false;
         }
-        
-        if (selectedInstructors.length > 0 && !selectedInstructors.includes(e.instructor)) return false;
-        
-        if (selectedMusic.length > 0) {
-            const matchesMusic = selectedMusic.some(f => f === 'live' ? e.live === 'yes' : e.music === f);
-            if (!matchesMusic) return false;
+
+        // Logic: Cross-category isolation
+        const hasClassFilters = selectedInstructors.length > 0 || selectedCats.includes('beg') || selectedCats.includes('int') || selectedCats.includes('adv') || selectedCats.includes('advCouples') || selectedCats.includes('class');
+        const hasMilongaFilters = selectedMusic.length > 0 || selectedCats.includes('milonga');
+
+        // Handle Classes
+        if (e.type === 'class') {
+            if (hasMilongaFilters && !hasClassFilters) return false; // Hide classes if ONLY milonga filters are set
+            
+            // Apply Class specific filters
+            if (selectedInstructors.length > 0 && !selectedInstructors.includes(e.instructor)) return false;
+            if (selectedCats.length > 0) {
+                const classCats = selectedCats.filter(c => c === 'class' || LEVELS.includes(c));
+                if (classCats.length > 0) {
+                    const matchesCat = classCats.some(f => f === 'class' || (e.level || "").toLowerCase() === f.toLowerCase());
+                    if (!matchesCat) return false;
+                }
+            }
         }
 
-        if (selectedCats.length > 0) {
-            const matchesCat = selectedCats.some(f => {
-                if (f === 'milonga') return e.type === 'milonga';
-                if (f === 'class') return e.type === 'class';
-                return (e.level || "").toLowerCase() === f.toLowerCase();
-            });
-            if (!matchesCat) return false;
+        // Handle Milongas
+        if (e.type === 'milonga') {
+            if (hasClassFilters && !hasMilongaFilters) return false; // Hide milongas if ONLY class filters are set
+
+            // Apply Milonga specific filters
+            if (selectedMusic.length > 0) {
+                const matchesMusic = selectedMusic.some(f => f === 'live' ? e.live === 'yes' : e.music === f);
+                if (!matchesMusic) return false;
+            }
+            if (selectedCats.includes('milonga')) {
+                // This is already true if e.type is milonga, but kept for consistency
+            }
         }
 
         return true;
@@ -299,12 +329,10 @@ function renderEvents() {
     list.innerHTML = html;
 }
 
-// Helper to handle localStorage safely
 function saveStorage(key, value) {
     try { localStorage.setItem(key, value); } catch (e) {}
 }
 
-// Lifecycle
 window.addEventListener('load', () => {
     initSettings();
     updateFilterUI();
