@@ -64,6 +64,16 @@
                         </div>
                     </div>
 
+                     <div>
+                        <p class="text-[9px] font-black uppercase tracking-widest mb-1.5 opacity-50">Music Type</p>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <button onclick="setFilter('trad')" id="filter-trad" class="filter-chip">Traditional</button>
+                            <button onclick="setFilter('alt')" id="filter-alt" class="filter-chip">Alternative</button>
+                            <button onclick="setFilter('both')" id="filter-both" class="filter-chip">Mixed</button>
+                            <button onclick="setFilter('live')" id="filter-live" class="filter-chip">Live Music</button>
+                        </div>
+                    </div>
+
                     <div>
                         <p class="text-[9px] font-black uppercase tracking-widest mb-1.5 opacity-50">Keywords</p>
                         <div class="relative flex items-center">
@@ -109,6 +119,7 @@
         const FAV_KEY = 'valentango_favorites';
         const PANE_KEY = 'valentango_pane_visible';
         const DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+        const MUSIC_TYPES = ['trad', 'alt', 'both', 'live'];
         
         let currentFilters = ['all'];
         let favorites = [];
@@ -290,21 +301,32 @@
                 const matchesSearch = !searchTerm || e.title.toLowerCase().includes(searchTerm) || 
                     (e.instructor || "").toLowerCase().includes(searchTerm) || (e.description || "").toLowerCase().includes(searchTerm);
                 if (!matchesSearch) return false;
+                
                 if (currentFilters.length === 1 && currentFilters.includes('all')) return true;
-                if (currentFilters.length === 1 && currentFilters.includes('fav')) return true;
 
                 const activeFilters = currentFilters.filter(f => f !== 'fav');
                 if (activeFilters.length === 0 || (activeFilters.length === 1 && activeFilters.includes('all'))) return true;
 
                 const selectedDays = activeFilters.filter(f => DAYS.includes(f));
                 const selectedInstructors = activeFilters.filter(f => dynamicInstructors.includes(f));
-                const selectedCats = activeFilters.filter(f => !DAYS.includes(f) && !dynamicInstructors.includes(f) && f !== 'all');
+                const selectedMusic = activeFilters.filter(f => MUSIC_TYPES.includes(f));
+                const selectedCats = activeFilters.filter(f => !DAYS.includes(f) && !dynamicInstructors.includes(f) && !MUSIC_TYPES.includes(f) && f !== 'all');
 
                 if (selectedDays.length > 0) {
                     const eventDay = new Date(e.start).toLocaleDateString([], { weekday: 'long' }).toLowerCase();
                     if (!selectedDays.includes(eventDay)) return false;
                 }
                 if (selectedInstructors.length > 0 && !selectedInstructors.includes(e.instructor)) return false;
+                
+                // Logic for Music Type Filtering
+                if (selectedMusic.length > 0) {
+                    const matchesMusic = selectedMusic.some(f => {
+                        if (f === 'live') return e.live === 'yes';
+                        return e.music === f;
+                    });
+                    if (!matchesMusic) return false;
+                }
+
                 if (selectedCats.length > 0) {
                     const matchesCat = selectedCats.some(f => {
                         if (f === 'milonga') return e.type === 'milonga';
@@ -339,6 +361,14 @@
                 const card = document.createElement('div');
                 card.className = 'event-card';
 
+                // Format music type for display
+                let musicDisplay = "";
+                if (e.type === 'milonga' && e.music) {
+                    const label = e.music === 'both' ? 'Mixed' : e.music.charAt(0).toUpperCase() + e.music.slice(1);
+                    const live = e.live === 'yes' ? ' + LIVE' : '';
+                    musicDisplay = ` <span class="text-[10px] opacity-30">|</span><span class="room-pill">${label}${live}</span>`;
+                }
+
                 card.innerHTML = `
                     <div class="flex justify-between items-start mb-2">
                         <div class="flex flex-col gap-1">
@@ -355,7 +385,10 @@
                         <span class="text-[10px] opacity-30">|</span>
                         <span class="price-text">${e.price}</span>
                         <span class="text-[10px] opacity-30">|</span>
-                        <span class="text-[10px] font-bold uppercase tracking-wider instructor-link" style="color: var(--accent-purple)">${linkifyInstructor(e.instructor)}</span>
+                        <div class="flex items-center">
+                            <span class="text-[10px] font-bold uppercase tracking-wider instructor-link" style="color: var(--accent-purple)">${linkifyInstructor(e.instructor)}</span>
+                        </div>
+                            ${musicDisplay}
                     </div>
                     <h3 class="text-lg sm:text-xl font-bold leading-tight mb-1" style="color: var(--text-primary)">${e.title}</h3>
                     <p class="text-[13px] leading-snug font-normal opacity-90" style="color: var(--text-secondary)">${e.description}</p>
