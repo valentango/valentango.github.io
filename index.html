@@ -29,6 +29,7 @@
                         <div class="flex flex-wrap items-center gap-2">
                             <button onclick="setFilter('all')" id="filter-all" class="filter-chip active">All</button>
                             <button onclick="setFilter('milonga')" id="filter-milonga" class="filter-chip">Milongas</button>
+                            <button onclick="setFilter('class')" id="filter-class" class="filter-chip">Classes</button>
                             <button onclick="clearFilters()" id="clear-filters" class="text-[10px] font-black uppercase tracking-widest px-2 text-rose-500 hidden bg-transparent border-none cursor-pointer">
                                 Clear ×
                             </button>
@@ -305,7 +306,11 @@
                 }
                 if (selectedInstructors.length > 0 && !selectedInstructors.includes(e.instructor)) return false;
                 if (selectedCats.length > 0) {
-                    const matchesCat = selectedCats.some(f => f === 'milonga' ? e.type === 'milonga' : (e.level || "").toLowerCase() === f.toLowerCase());
+                    const matchesCat = selectedCats.some(f => {
+                        if (f === 'milonga') return e.type === 'milonga';
+                        if (f === 'class') return e.type === 'class';
+                        return (e.level || "").toLowerCase() === f.toLowerCase();
+                    });
                     if (!matchesCat) return false;
                 }
                 return true;
@@ -324,7 +329,6 @@
 
                 if (fullDate !== lastDate) {
                     const divider = document.createElement('div');
-                    // Reduced margin-top and vertical padding for a tighter layout
                     divider.className = 'py-2 mt-2 border-b border-[var(--border-color)] mb-4';
                     divider.innerHTML = `<h2 class="text-xs font-black uppercase tracking-[0.2em] opacity-50">${fullDate}</h2>`;
                     list.appendChild(divider);
@@ -345,8 +349,8 @@
                         </div>
                     </div>
                     <div class="flex flex-wrap items-center gap-x-2 gap-y-1 mb-2">
-                        <span class="text-[10px] font-bold uppercase tracking-wider opacity-70" style="color: var(--text-secondary)">${e.level === 'advCouples' ? 'ADV COUPLES' : e.level}</span>
-                        <span class="text-[10px] opacity-30">|</span>
+                        <span class="text-[10px] font-bold uppercase tracking-wider opacity-70" style="color: var(--text-secondary)">${e.level === 'advCouples' ? 'ADV COUPLES' : e.level || ''}</span>
+                        ${e.level ? '<span class="text-[10px] opacity-30">|</span>' : ''}
                         <span class="room-pill">${e.room}</span>
                         <span class="text-[10px] opacity-30">|</span>
                         <span class="price-text">${e.price}</span>
