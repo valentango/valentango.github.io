@@ -18,6 +18,8 @@
     
     --accent-purple: #c084fc;
     --accent-blue: #60a5fa;
+    --bullet-text: #09090b; /* Contrast for dark mode */
+    
     --safe-top: env(safe-area-inset-top);
     --header-height: 180px; 
 }
@@ -39,6 +41,7 @@ body.light-mode {
     --room-pill-text: #3a3a3c;
     --accent-purple: #9333ea;
     --accent-blue: #2563eb;
+    --bullet-text: #ffffff; /* Clean white for light mode purple */
 }
 
 /* Base Styles */
@@ -116,6 +119,23 @@ main#event-list { padding-bottom: 120px; }
 }
 
 body.light-mode .event-card { box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+
+/* How-To Numbered Bullets */
+.step-number {
+    background-color: var(--accent-purple);
+    color: var(--bullet-text);
+    border-radius: 9999px;
+    width: 1.5rem;
+    height: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    font-weight: 900;
+    flex-shrink: 0;
+    margin-top: 0.125rem;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
 
 .milonga-indicator { color: var(--accent-purple); font-weight: 800; }
 .class-indicator { color: var(--accent-blue); font-weight: 800; }
