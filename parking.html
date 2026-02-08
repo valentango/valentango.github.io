@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Parking - ValenTango 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="transition-colors">
+
+    <header class="main-header sticky top-0 z-40">
+        <div class="max-w-2xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <a href="index.html" class="text-[var(--accent-purple)] font-extrabold flex items-center gap-1 hover:opacity-80 transition-opacity">
+                    <span class="text-xl">←</span> BACK
+                </a>
+                <h1 class="text-xl font-extrabold tracking-tight">Parking</h1>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-2xl mx-auto px-4 pt-6 pb-32">
+        
+        <div class="event-card mb-6">
+            <h2 class="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--accent-blue)] mb-2">Overnight Guests</h2>
+            <p class="text-[15px] leading-relaxed font-bold text-[var(--text-primary)]">
+                Overnight guests have complementary parking using their guestroom keycard.
+            </p>
+        </div>
+
+        <div class="event-card mb-8">
+            <h2 class="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--accent-purple)] mb-4">Non-Overnight Guests</h2>
+            <p class="text-[13px] text-[var(--text-secondary)] mb-6 leading-relaxed">
+                Non-overnight guests of the festival also have complimentary parking by using the following procedure:
+            </p>
+
+            <ul class="space-y-6">
+                <li class="flex items-start gap-4">
+                    <span class="bg-[var(--accent-purple)] text-black rounded-full w-6 h-6 flex items-center justify-center text-[10px] font-black shrink-0 mt-0.5">1</span>
+                    <span class="text-[14px] leading-snug">As you drive into the parking lot, <strong>pick up a white parking ticket</strong> and bring with you into the hotel.</span>
+                </li>
+                <li class="flex items-start gap-4">
+                    <span class="bg-[var(--accent-purple)] text-black rounded-full w-6 h-6 flex items-center justify-center text-[10px] font-black shrink-0 mt-0.5">2</span>
+                    <span class="text-[14px] leading-snug">Inside the hotel, <strong>pick up a green parking pass</strong> from the hotel registration desk or the ValenTango registration table.</span>
+                </li>
+                <li class="flex items-start gap-4">
+                    <span class="bg-[var(--accent-purple)] text-black rounded-full w-6 h-6 flex items-center justify-center text-[10px] font-black shrink-0 mt-0.5">3</span>
+                    <span class="text-[14px] leading-snug">When ready to leave, locate a <strong>parking teller machine</strong> (lobby or festival foyer). Insert your white ticket first, wait for the price, then insert the green pass to zero out the total.</span>
+                </li>
+                <li class="flex items-start gap-4">
+                    <span class="bg-[var(--accent-purple)] text-black rounded-full w-6 h-6 flex items-center justify-center text-[10px] font-black shrink-0 mt-0.5">4</span>
+                    <span class="text-[14px] leading-snug">Use your <strong>zeroed out white pass</strong> to exit the parking lot without having to pay.</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="text-center"> 
+            <a href="https://valentango.us/parking/" target="_blank" class="text-[11px] font-bold uppercase tracking-widest text-[var(--accent-blue)] opacity-70 hover:opacity-100 transition-opacity">
+                Source: Official Parking Page ↗
+            </a>
+        </div>
+
+    </main>
+
+    <footer class="fixed bottom-0 left-0 right-0 z-50 px-4 pb-6 pt-2 pointer-events-none">
+        <div class="max-w-2xl mx-auto flex justify-center gap-3 pointer-events-auto">
+            <a href="/" class="footer-link"><span>Schedule</span></a>
+            <a href="how.html" class="footer-link"><span>?</span></a>
+            <a href="map.html" class="footer-link"><span>Venue Map</span></a>
+        </div>
+    </footer>
+
+    <script>
+        const THEME_KEY = 'valentango_theme_pref';
+        if (localStorage.getItem(THEME_KEY) === 'true') {
+            document.body.classList.add('light-mode');
+        }
+    </script>
+</body>
+</html>
