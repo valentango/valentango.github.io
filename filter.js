@@ -2,13 +2,17 @@ const FILTER_KEY = 'valentango_filter_pref';
 const THEME_KEY = 'valentango_theme_pref';
 const FAV_KEY = 'valentango_favorites';
 const PANE_KEY = 'valentango_pane_visible';
-const DAYS = ['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'];
+const HIDE_PAST_KEY = 'valentango_hide_past';
+
+const ALL_DAYS = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
+let DAYS = []; // Will be rotated based on today
 const MUSIC_TYPES = ['trad', 'alt', 'both', 'live'];
 const LEVELS = ['beg', 'int', 'adv', 'advCouples'];
 
 let currentFilters = ['all'];
 let favorites = [];
 let dynamicInstructors = [];
+let hidePast = true;
 
 function initSettings() {
     try {
@@ -17,6 +21,9 @@ function initSettings() {
         
         const savedFavs = localStorage.getItem(FAV_KEY);
         if (savedFavs) favorites = JSON.parse(savedFavs);
+
+        const savedHidePast = localStorage.getItem(HIDE_PAST_KEY);
+        hidePast = savedHidePast === null ? true : savedHidePast === 'true';
         
         const isLight = localStorage.getItem(THEME_KEY) === 'true';
         if (isLight) {
@@ -27,19 +34,44 @@ function initSettings() {
         const paneVisible = localStorage.getItem(PANE_KEY) === 'true';
         applyPaneState(paneVisible);
 
+        // 1. Rotate days starting today
+        const today = new Date().getDay();
+        DAYS = [...ALL_DAYS.slice(today), ...ALL_DAYS.slice(0, today)];
+        renderDayFilters();
+
         if (typeof events !== 'undefined') {
-            const instructorSet = new Set();
-            events.forEach(e => {
-                if (e.type === 'class' && e.instructor && e.instructor !== "Various") {
-                    instructorSet.add(e.instructor);
-                }
-            });
-            dynamicInstructors = Array.from(instructorSet).sort();
-            renderInstructorFilters();
+            updateDynamicData();
         }
     } catch (e) { 
         console.warn("Storage access denied", e); 
     }
+}
+
+function updateDynamicData() {
+    const now = new Date();
+    const instructorSet = new Set();
+    
+    events.forEach(e => {
+        // Only include instructors if the event hasn't passed OR if hidePast is off
+        const isPast = new Date(e.end) < now;
+        if (hidePast && isPast) return;
+
+        if (e.type === 'class' && e.instructor && e.instructor !== "Various") {
+            instructorSet.add(e.instructor);
+        }
+    });
+    dynamicInstructors = Array.from(instructorSet).sort();
+    renderInstructorFilters();
+}
+
+function renderDayFilters() {
+    const container = document.getElementById('day-filters');
+    if (!container) return;
+    container.innerHTML = DAYS.map(day => `
+        <button onclick="setFilter('${day}')" id="filter-${day}" class="filter-chip">
+            ${day.charAt(0).toUpperCase()}${day.slice(1, 2)}
+        </button>
+    `).join('');
 }
 
 function renderInstructorFilters() {
@@ -53,6 +85,13 @@ function renderInstructorFilters() {
             ${ins}
         </button>
     `).join('');
+}
+
+function toggleHidePast() {
+    hidePast = !hidePast;
+    saveStorage(HIDE_PAST_KEY, hidePast);
+    updateDynamicData();
+    renderEvents();
 }
 
 function toggleFilterPane() {
@@ -168,6 +207,10 @@ function clearFilters() {
 
 function updateFilterUI() {
     document.querySelectorAll('.filter-chip').forEach(chip => {
+        if (chip.id === 'toggle-past') {
+            chip.classList.toggle('active', hidePast);
+            return;
+        }
         const filterId = chip.id.replace('filter-', '').replace(/_/g, ' ');
         chip.classList.toggle('active', currentFilters.includes(filterId));
     });
@@ -186,6 +229,7 @@ function renderEvents() {
     const searchInput = document.getElementById('search-input');
     const countDisplay = document.getElementById('search-count');
     const searchTerm = searchInput?.value.toLowerCase().trim() || '';
+    const now = new Date();
     
     if (!list || typeof events === 'undefined') return;
 
@@ -203,6 +247,10 @@ function renderEvents() {
     };
 
     const filtered = events.filter(e => {
+        // 0. Hide Past Filter
+        if (hidePast && new Date(e.end) < now) return false;
+
+        // 1. Favorites Filter
         if (currentFilters.includes('fav') && !favorites.includes(e.id)) return false;
         
         const matchesSearch = !searchTerm || 
@@ -214,10 +262,10 @@ function renderEvents() {
         const activeFilters = currentFilters.filter(f => f !== 'fav' && f !== 'all');
         if (activeFilters.length === 0) return true;
 
-        const selectedDays = activeFilters.filter(f => DAYS.includes(f));
+        const selectedDays = activeFilters.filter(f => ALL_DAYS.includes(f));
         const selectedInstructors = activeFilters.filter(f => dynamicInstructors.includes(f));
         const selectedMusic = activeFilters.filter(f => MUSIC_TYPES.includes(f));
-        const selectedCats = activeFilters.filter(f => !DAYS.includes(f) && !dynamicInstructors.includes(f) && !MUSIC_TYPES.includes(f));
+        const selectedCats = activeFilters.filter(f => !ALL_DAYS.includes(f) && !dynamicInstructors.includes(f) && !MUSIC_TYPES.includes(f));
 
         if (selectedDays.length > 0) {
             const eventDay = new Date(e.start).toLocaleDateString([], { weekday: 'long' }).toLowerCase();
@@ -250,7 +298,6 @@ function renderEvents() {
         return true;
     }).sort((a,b) => new Date(a.start) - new Date(b.start));
 
-    // Update the search count display
     if (countDisplay) {
         countDisplay.innerText = filtered.length > 0 ? `${filtered.length} events` : '0 events';
     }

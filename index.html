@@ -21,9 +21,14 @@
             </div>
             
             <div class="date-row flex justify-between items-center py-2">
-                <button onclick="setFilter('fav')" id="filter-fav" class="filter-chip fav-active py-1 px-3 text-[10px]">
-                    ★ Favorites
-                </button>
+                <div class="flex gap-2">
+                    <button onclick="setFilter('fav')" id="filter-fav" class="filter-chip fav-active py-1 px-3 text-[10px]">
+                        ★ Favorites
+                    </button>
+                    <button onclick="toggleHidePast()" id="toggle-past" class="filter-chip py-1 px-3 text-[10px]">
+                        Hide Past
+                    </button>
+                </div>
                 <button onclick="toggleFilterPane()" class="collapse-toggle" id="pane-toggle-btn">
                     <span id="pane-toggle-text">Filters</span>
                     <svg id="pane-arrow" xmlns="http://www.w3.org/2000/svg" class="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -41,25 +46,15 @@
                         <button onclick="clearFilters()" id="clear-filters" class="text-[10px] font-black uppercase text-rose-500 hidden ml-auto">Clear ×</button>
                     </div>
 
-          
-
                     <div class="flex flex-col gap-3 pb-3 border-b border-[var(--border-color)]">
-                                  <div class="flex flex-wrap gap-2">
-                        <button onclick="setFilter('beg')" id="filter-beg" class="filter-chip">Beg</button>
-                        <button onclick="setFilter('int')" id="filter-int" class="filter-chip">Int</button>
-                        <button onclick="setFilter('adv')" id="filter-adv" class="filter-chip">Adv</button>
-                        <button onclick="setFilter('advCouples')" id="filter-advCouples" class="filter-chip">Adv Couples</button>
-                         </div>
-                        <div id="instructor-filters" class="flex flex-wrap gap-2"></div>
                         <div class="flex flex-wrap gap-2">
-                            <button onclick="setFilter('tuesday')" id="filter-tuesday" class="filter-chip">Tu</button>
-                            <button onclick="setFilter('wednesday')" id="filter-wednesday" class="filter-chip">We</button>
-                            <button onclick="setFilter('thursday')" id="filter-thursday" class="filter-chip">Th</button>
-                            <button onclick="setFilter('friday')" id="filter-friday" class="filter-chip">Fr</button>
-                            <button onclick="setFilter('saturday')" id="filter-saturday" class="filter-chip">Sa</button>
-                            <button onclick="setFilter('sunday')" id="filter-sunday" class="filter-chip">Su</button>
-                            <button onclick="setFilter('monday')" id="filter-monday" class="filter-chip">Mo</button>
+                            <button onclick="setFilter('beg')" id="filter-beg" class="filter-chip">Beg</button>
+                            <button onclick="setFilter('int')" id="filter-int" class="filter-chip">Int</button>
+                            <button onclick="setFilter('adv')" id="filter-adv" class="filter-chip">Adv</button>
+                            <button onclick="setFilter('advCouples')" id="filter-advCouples" class="filter-chip">Adv Couples</button>
                         </div>
+                        <div id="instructor-filters" class="flex flex-wrap gap-2"></div>
+                        <div id="day-filters" class="flex flex-wrap gap-2"></div>
                     </div>
 
                     <div class="space-y-3 pb-2">
