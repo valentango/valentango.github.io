@@ -33,39 +33,25 @@
             </div>
 
             <div id="filter-wrapper" class="filter-container collapsed">
-                <h2 class="text-[12px] font-black uppercase tracking-widest mb-4">Filter Events By:</h2>
-                
-                <div class="space-y-4 mb-4">
-                    <div>
-                        <p class="text-[9px] font-black uppercase tracking-widest mb-1.5 opacity-50">General</p>
-                        <div class="flex flex-wrap items-center gap-2">
-                            <button onclick="setFilter('all')" id="filter-all" class="filter-chip active">All</button>
-                            <button onclick="setFilter('milonga')" id="filter-milonga" class="filter-chip">Milongas</button>
-                            <button onclick="setFilter('class')" id="filter-class" class="filter-chip">Classes</button>
-                            <button onclick="clearFilters()" id="clear-filters" class="text-[10px] font-black uppercase tracking-widest px-2 text-rose-500 hidden bg-transparent border-none cursor-pointer">
-                                Clear ×
-                            </button>
-                        </div>
+                <div class="flex flex-col gap-4">
+                    <div class="flex flex-wrap items-center gap-2 pb-3 border-b border-[var(--border-color)]">
+                        <button onclick="setFilter('all')" id="filter-all" class="filter-chip active">All</button>
+                        <button onclick="setFilter('milonga')" id="filter-milonga" class="filter-chip">Milongas</button>
+                        <button onclick="setFilter('class')" id="filter-class" class="filter-chip">Classes</button>
+                        <button onclick="clearFilters()" id="clear-filters" class="text-[10px] font-black uppercase text-rose-500 hidden ml-auto">Clear ×</button>
                     </div>
 
-                    <div>
-                        <p class="text-[9px] font-black uppercase tracking-widest mb-1.5 opacity-50">Class Levels</p>
-                        <div class="flex flex-wrap items-center gap-2">
-                            <button onclick="setFilter('beg')" id="filter-beg" class="filter-chip">Beg</button>
-                            <button onclick="setFilter('int')" id="filter-int" class="filter-chip">Int</button>
-                            <button onclick="setFilter('adv')" id="filter-adv" class="filter-chip">Adv</button>
-                            <button onclick="setFilter('advCouples')" id="filter-advCouples" class="filter-chip">Adv Couples</button>
-                        </div>
-                    </div>
+          
 
-                    <div>
-                        <p class="text-[9px] font-black uppercase tracking-widest mb-1.5 opacity-50">Instructors</p>
-                        <div id="instructor-filters" class="flex flex-wrap items-center gap-2"></div>
-                    </div>
-
-                    <div>
-                        <p class="text-[9px] font-black uppercase tracking-widest mb-1.5 opacity-50">Days</p>
-                        <div class="flex flex-wrap items-center gap-2">
+                    <div class="flex flex-col gap-3 pb-3 border-b border-[var(--border-color)]">
+                                  <div class="flex flex-wrap gap-2">
+                        <button onclick="setFilter('beg')" id="filter-beg" class="filter-chip">Beg</button>
+                        <button onclick="setFilter('int')" id="filter-int" class="filter-chip">Int</button>
+                        <button onclick="setFilter('adv')" id="filter-adv" class="filter-chip">Adv</button>
+                        <button onclick="setFilter('advCouples')" id="filter-advCouples" class="filter-chip">Adv Couples</button>
+                         </div>
+                        <div id="instructor-filters" class="flex flex-wrap gap-2"></div>
+                        <div class="flex flex-wrap gap-2">
                             <button onclick="setFilter('tuesday')" id="filter-tuesday" class="filter-chip">Tu</button>
                             <button onclick="setFilter('wednesday')" id="filter-wednesday" class="filter-chip">We</button>
                             <button onclick="setFilter('thursday')" id="filter-thursday" class="filter-chip">Th</button>
@@ -76,32 +62,28 @@
                         </div>
                     </div>
 
-                     <div>
-                        <p class="text-[9px] font-black uppercase tracking-widest mb-1.5 opacity-50">Music Type</p>
-                        <div class="flex flex-wrap items-center gap-2">
-                            <button onclick="setFilter('trad')" id="filter-trad" class="filter-chip">Traditional</button>
-                            <button onclick="setFilter('alt')" id="filter-alt" class="filter-chip">Alternative</button>
+                    <div class="space-y-3 pb-2">
+                        <div class="flex flex-wrap gap-2">
+                            <button onclick="setFilter('trad')" id="filter-trad" class="filter-chip">Trad</button>
+                            <button onclick="setFilter('alt')" id="filter-alt" class="filter-chip">Alt</button>
                             <button onclick="setFilter('both')" id="filter-both" class="filter-chip">Mixed</button>
-                            <button onclick="setFilter('live')" id="filter-live" class="filter-chip">Live Music</button>
+                            <button onclick="setFilter('live')" id="filter-live" class="filter-chip">Live</button>
                         </div>
-                    </div>
-
-                    <div>
-                        <p class="text-[9px] font-black uppercase tracking-widest mb-1.5 opacity-50">Keywords</p>
-                        <div class="relative flex items-center">
+                        <div class="relative">
                             <input 
                                 type="text" 
                                 id="search-input" 
                                 oninput="renderEvents()" 
                                 placeholder="Search topic or instructor..." 
-                                class="w-full bg-[var(--card-bg)] border border-[var(--chip-border)] text-[var(--text-primary)] pl-4 pr-10 py-2 rounded-xl text-sm focus:outline-none focus:ring-2 focus:ring-[var(--accent-blue)] transition-all"
+                                class="w-full bg-[var(--card-bg)] border border-[var(--chip-border)] text-[var(--text-primary)] pl-4 pr-10 py-2 rounded-xl text-sm focus:outline-none focus:ring-1 focus:ring-[var(--accent-blue)]"
                             />
-                            <button onclick="clearSearch()" id="clear-search-btn" class="absolute right-2 p-2 text-[var(--text-secondary)] hover:text-rose-500 transition-colors hidden">
+                            <button onclick="clearSearch()" id="clear-search-btn" class="absolute right-2 top-1/2 -translate-y-1/2 p-2 text-[var(--text-secondary)] hover:text-rose-500 hidden">
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
                                 </svg>
                             </button>
                         </div>
+                        <div id="search-count" class="text-[10px] font-black uppercase tracking-widest opacity-40 text-right px-1"></div>
                     </div>
                 </div>
             </div>

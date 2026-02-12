@@ -126,7 +126,6 @@ function setFilter(filter) {
         } else {
             currentFilters.push(filter);
 
-            // Logic to clear general filters if a specialized sub-filter is selected
             const isLevel = LEVELS.includes(filter);
             const isInstructor = dynamicInstructors.includes(filter);
             if (isLevel || isInstructor) {
@@ -185,6 +184,7 @@ function updateFilterUI() {
 function renderEvents() {
     const list = document.getElementById('event-list');
     const searchInput = document.getElementById('search-input');
+    const countDisplay = document.getElementById('search-count');
     const searchTerm = searchInput?.value.toLowerCase().trim() || '';
     
     if (!list || typeof events === 'undefined') return;
@@ -203,17 +203,14 @@ function renderEvents() {
     };
 
     const filtered = events.filter(e => {
-        // 1. Favorite Filter
         if (currentFilters.includes('fav') && !favorites.includes(e.id)) return false;
         
-        // 2. Search Term
         const matchesSearch = !searchTerm || 
             e.title.toLowerCase().includes(searchTerm) || 
             (e.instructor || "").toLowerCase().includes(searchTerm) || 
             (e.description || "").toLowerCase().includes(searchTerm);
         if (!matchesSearch) return false;
         
-        // 3. Category/Day/Music Filters
         const activeFilters = currentFilters.filter(f => f !== 'fav' && f !== 'all');
         if (activeFilters.length === 0) return true;
 
@@ -222,21 +219,16 @@ function renderEvents() {
         const selectedMusic = activeFilters.filter(f => MUSIC_TYPES.includes(f));
         const selectedCats = activeFilters.filter(f => !DAYS.includes(f) && !dynamicInstructors.includes(f) && !MUSIC_TYPES.includes(f));
 
-        // Filter by Day (Applies to all)
         if (selectedDays.length > 0) {
             const eventDay = new Date(e.start).toLocaleDateString([], { weekday: 'long' }).toLowerCase();
             if (!selectedDays.includes(eventDay)) return false;
         }
 
-        // Logic: Cross-category isolation
         const hasClassFilters = selectedInstructors.length > 0 || selectedCats.includes('beg') || selectedCats.includes('int') || selectedCats.includes('adv') || selectedCats.includes('advCouples') || selectedCats.includes('class');
         const hasMilongaFilters = selectedMusic.length > 0 || selectedCats.includes('milonga');
 
-        // Handle Classes
         if (e.type === 'class') {
-            if (hasMilongaFilters && !hasClassFilters) return false; // Hide classes if ONLY milonga filters are set
-            
-            // Apply Class specific filters
+            if (hasMilongaFilters && !hasClassFilters) return false;
             if (selectedInstructors.length > 0 && !selectedInstructors.includes(e.instructor)) return false;
             if (selectedCats.length > 0) {
                 const classCats = selectedCats.filter(c => c === 'class' || LEVELS.includes(c));
@@ -247,22 +239,21 @@ function renderEvents() {
             }
         }
 
-        // Handle Milongas
         if (e.type === 'milonga') {
-            if (hasClassFilters && !hasMilongaFilters) return false; // Hide milongas if ONLY class filters are set
-
-            // Apply Milonga specific filters
+            if (hasClassFilters && !hasMilongaFilters) return false;
             if (selectedMusic.length > 0) {
                 const matchesMusic = selectedMusic.some(f => f === 'live' ? e.live === 'yes' : e.music === f);
                 if (!matchesMusic) return false;
-            }
-            if (selectedCats.includes('milonga')) {
-                // This is already true if e.type is milonga, but kept for consistency
             }
         }
 
         return true;
     }).sort((a,b) => new Date(a.start) - new Date(b.start));
+
+    // Update the search count display
+    if (countDisplay) {
+        countDisplay.innerText = filtered.length > 0 ? `${filtered.length} events` : '0 events';
+    }
 
     updateFilterUI();
 
