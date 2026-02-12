@@ -6,6 +6,7 @@ const HIDE_PAST_KEY = 'valentango_hide_past';
 
 const ALL_DAYS = ['sunday', 'monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday'];
 let DAYS = []; // Will be rotated based on today
+let activeDaysWithEvents = []; // NEW: Tracks which days actually have events
 const MUSIC_TYPES = ['trad', 'alt', 'both', 'live'];
 const LEVELS = ['beg', 'int', 'adv', 'advCouples'];
 
@@ -34,10 +35,9 @@ function initSettings() {
         const paneVisible = localStorage.getItem(PANE_KEY) === 'true';
         applyPaneState(paneVisible);
 
-        // 1. Rotate days starting today
+        // Rotate days starting today
         const today = new Date().getDay();
         DAYS = [...ALL_DAYS.slice(today), ...ALL_DAYS.slice(0, today)];
-        renderDayFilters();
 
         if (typeof events !== 'undefined') {
             updateDynamicData();
@@ -50,24 +50,37 @@ function initSettings() {
 function updateDynamicData() {
     const now = new Date();
     const instructorSet = new Set();
+    const daysWithEventsSet = new Set();
     
     events.forEach(e => {
-        // Only include instructors if the event hasn't passed OR if hidePast is off
+        // Skip if hidePast is on and event is finished
         const isPast = new Date(e.end) < now;
         if (hidePast && isPast) return;
 
+        // Track days that have events
+        const eventDay = new Date(e.start).toLocaleDateString([], { weekday: 'long' }).toLowerCase();
+        daysWithEventsSet.add(eventDay);
+
+        // Track instructors that have events
         if (e.type === 'class' && e.instructor && e.instructor !== "Various") {
             instructorSet.add(e.instructor);
         }
     });
+
+    // Only keep days that exist in our DAYS rotation AND have events
+    activeDaysWithEvents = DAYS.filter(day => daysWithEventsSet.has(day));
     dynamicInstructors = Array.from(instructorSet).sort();
+    
+    renderDayFilters();
     renderInstructorFilters();
 }
 
 function renderDayFilters() {
     const container = document.getElementById('day-filters');
     if (!container) return;
-    container.innerHTML = DAYS.map(day => `
+    
+    // Only render buttons for days that actually have events
+    container.innerHTML = activeDaysWithEvents.map(day => `
         <button onclick="setFilter('${day}')" id="filter-${day}" class="filter-chip">
             ${day.charAt(0).toUpperCase()}${day.slice(1, 2)}
         </button>
@@ -247,10 +260,10 @@ function renderEvents() {
     };
 
     const filtered = events.filter(e => {
-        // 0. Hide Past Filter
+        // Hide Past Filter
         if (hidePast && new Date(e.end) < now) return false;
 
-        // 1. Favorites Filter
+        // Favorites Filter
         if (currentFilters.includes('fav') && !favorites.includes(e.id)) return false;
         
         const matchesSearch = !searchTerm || 
