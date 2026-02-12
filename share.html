@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>Share - ValenTango 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="styles.css">
+    <style>
+        /* Ensuring the button looks integrated */
+        .copy-btn {
+            cursor: pointer;
+            transition: transform 0.1s ease;
+        }
+        .copy-btn:active {
+            transform: scale(0.95);
+        }
+    </style>
+</head>
+<body class="transition-colors">
+
+    <header class="main-header sticky top-0 z-40">
+        <div class="max-w-2xl mx-auto px-4">
+            <div class="flex justify-between items-center py-4">
+                <a href="index.html" class="text-[var(--accent-purple)] font-extrabold flex items-center gap-1 hover:opacity-80 transition-opacity">
+                    <span class="text-xl">←</span> BACK
+                </a>
+                <h1 class="text-xl font-extrabold tracking-tight">Share</h1>
+            </div>
+        </div>
+    </header>
+
+    <main class="max-w-2xl mx-auto px-4 pt-6 pb-20">
+
+        <div class="p-6 rounded-2xl border border-[var(--border-color)] bg-[var(--card-bg)] shadow-sm mb-6 text-center">
+            <h2 class="text-[10px] font-black uppercase tracking-[0.2em] text-[var(--text-secondary)] mb-4 opacity-70">Share this page</h2>
+            
+            <div class="flex items-center justify-center gap-3 bg-[var(--card-bg)] border border-[var(--border-color)] p-3 rounded-xl">
+                <span id="shareUrl" class="text-sm font-bold text-[var(--text-primary)]">https://valentango.github.io</span>
+                <button onclick="copyToClipboard()" class="copy-btn flex items-center gap-1 bg-[var(--accent-purple)] text-white px-3 py-1 rounded-lg text-xs font-bold uppercase tracking-wider hover:opacity-90">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+                    <span>Copy to Clipboard</span>
+                </button>
+            </div>
+            
+            <p id="copyFeedback" class="text-[10px] font-bold text-[var(--accent-blue)] mt-2 uppercase opacity-0 transition-opacity">Link copied!</p>
+        </div>
+
+        <div class="flex flex-col items-center">
+            <div class="bg-white p-4 rounded-[24px] shadow-sm inline-block">
+                <img src="qr.png" alt="ValenTango 2026 QR Code" class="w-48 h-48 block">
+            </div>
+        </div>
+        
+    </main>
+
+    <footer class="fixed bottom-0 left-0 right-0 z-50 px-4 pb-6 pt-2 pointer-events-none">
+        <div class="max-w-2xl mx-auto flex justify-center gap-3 pointer-events-auto">
+            <a href="/" class="footer-link"><span>Schedule</span></a>
+            <a href="how.html" class="footer-link"><span>?</span></a>
+            <a href="parking.html" class="footer-link"><span>Parking</span></a>
+            <a href="map.html" class="footer-link"><span>Map</span></a>
+        </div>
+    </footer>
+
+    <script>
+        // Theme persistence
+        const THEME_KEY = 'valentango_theme_pref';
+        if (localStorage.getItem(THEME_KEY) === 'true') {
+            document.body.classList.add('light-mode');
+        }
+
+        // Copy function
+        function copyToClipboard() {
+            const url = document.getElementById('shareUrl').innerText;
+            navigator.clipboard.writeText(url).then(() => {
+                const feedback = document.getElementById('copyFeedback');
+                feedback.style.opacity = '1';
+                setTimeout(() => {
+                    feedback.style.opacity = '0';
+                }, 2000);
+            });
+        }
+    </script>
+</body>
+</html>
